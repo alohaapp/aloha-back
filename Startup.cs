@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Aloha
 {
@@ -27,11 +28,27 @@ namespace Aloha
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddSwaggerGen(swagger =>
+            {
+                var info = new Info()
+                {
+                    Title = SwaggerConfig.DocInfoTitle,
+                    Version = SwaggerConfig.DocInfoVersion,
+                    Description = SwaggerConfig.DocInfoDescription,
+                    Contact = new Contact() { Name = SwaggerConfig.ContactName, Url = SwaggerConfig.ContactUrl }
+                };
+
+                swagger.SwaggerDoc(SwaggerConfig.DocNameV1, info);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint(SwaggerConfig.EndpointUrl, SwaggerConfig.EndpointDescription));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
