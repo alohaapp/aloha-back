@@ -1,8 +1,12 @@
+using System;
+using System.Text.RegularExpressions;
+using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
@@ -23,12 +27,6 @@ namespace Aloha
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
-
             services.AddSwaggerGen(swagger =>
             {
                 var info = new Info()
@@ -40,6 +38,16 @@ namespace Aloha
                 };
 
                 swagger.SwaggerDoc(SwaggerConfig.DocNameV1, info);
+            });
+
+            services.AddDbContext<AlohaContext>(options => {
+                string connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
+                string portNumber = Regex.Match(connectionString, @"(?<=Data Source.+:)\d+")?.Value;
+
+                connectionString += ";Port=" + portNumber;
+                connectionString = connectionString.Replace(":" + portNumber, "");
+
+                options.UseMySql(connectionString);
             });
         }
 
@@ -68,16 +76,6 @@ namespace Aloha
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
             });
         }
     }
