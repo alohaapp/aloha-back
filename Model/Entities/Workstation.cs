@@ -10,8 +10,10 @@ namespace Aloha.Model.Entities
         public int Id { get; }
         public float X { get; set; }
         public float Y { get; set; }
-
         public int FloorId { get; set; }
+        public int WorkerId { get; set; }
+        
         public Floor Floor { get; }
+        public Worker Worker { get; }
     }
 }
