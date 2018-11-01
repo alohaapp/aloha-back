@@ -69,7 +69,6 @@ namespace Aloha
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
 
             app.UseMvc(routes =>
             {
