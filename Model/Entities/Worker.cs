@@ -7,7 +7,7 @@ namespace Aloha.Model.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         [Url]

@@ -41,13 +41,14 @@ namespace Aloha
             });
 
             services.AddDbContext<AlohaContext>(options => {
-                string connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
+                /*string connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
                 string portNumber = Regex.Match(connectionString, @"(?<=Data Source.+:)\d+")?.Value;
 
                 connectionString += ";Port=" + portNumber;
                 connectionString = connectionString.Replace(":" + portNumber, "");
 
-                options.UseMySql(connectionString);
+                options.UseMySql(connectionString);*/
+                options.UseMySql("Server=localhost;Database=aloha;Uid=aloha;Pwd=aloha;");
             });
         }
 
