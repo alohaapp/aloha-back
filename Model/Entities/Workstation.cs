@@ -8,12 +8,15 @@ namespace Aloha.Model.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; private set; }
+        [Required]
         public float X { get; set; }
+        [Required]
         public float Y { get; set; }
-        public int FloorId { get; set; }
-        public int WorkerId { get; set; }
+        
+        [ForeignKey(nameof(Worker))]
+        public int? WorkerId { get; set; }
+        public virtual Worker Worker { get; set; }
 
-        public Floor Floor { get; }
-        public Worker Worker { get; }
+        public virtual Floor Floor { get; set; }
     }
 }

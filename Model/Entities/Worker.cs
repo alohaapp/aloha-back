@@ -8,6 +8,7 @@ namespace Aloha.Model.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; private set; }
+        [Required]
         public string Name { get; set; }
         public string Surname { get; set; }
         [Url]
@@ -16,6 +17,7 @@ namespace Aloha.Model.Entities
         public string Email { get; set; }
         public string Notes { get; set; }
 
-        public User User { get; }
+        public virtual User User { get; set; }
+        public virtual Workstation Workstation { get; set; }
     }
 }
