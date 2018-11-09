@@ -76,6 +76,14 @@ namespace Aloha
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
+
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<AlohaContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }

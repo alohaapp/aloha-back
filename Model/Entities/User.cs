@@ -7,11 +7,14 @@ namespace Aloha.Model.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int Id { get; private set; }
+        [Required]
         public string Username { get; set; }
-        public string Password { get; set; }
+        //public string Password { get; set; } // Insecure D:
         public bool IsAdmin { get; set; } // 👀
-        
-        public Worker Worker { get; }
+
+        [ForeignKey(nameof(Worker))]
+        public int? WorkerId { get; set; }
+        public virtual Worker Worker { get; set; }
     }
 }
