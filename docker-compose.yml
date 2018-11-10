@@ -9,7 +9,7 @@ services:
         depends_on:
             - aloha-mysql
     aloha-mysql:
-        image: hypriot/rpi-mysql:5.5
+        image: mysql:5.5
         environment:
             MYSQL_ROOT_PASSWORD: "aloha"
             MYSQL_DATABASE: "aloha"
