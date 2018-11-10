@@ -82,12 +82,7 @@ namespace Aloha
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{id?}");
-            });
+            app.UseMvc();
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
