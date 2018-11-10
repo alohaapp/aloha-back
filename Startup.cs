@@ -52,8 +52,11 @@ namespace Aloha
                 string connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
                 string portNumber = Regex.Match(connectionString, @"(?<=Data Source.+:)\d+")?.Value;
 
-                connectionString += ";Port=" + portNumber;
-                connectionString = connectionString.Replace(":" + portNumber, "");
+                if (portNumber != null && portNumber.Length > 0)
+                {
+                    connectionString += ";Port=" + portNumber;
+                    connectionString = connectionString.Replace(":" + portNumber, "");
+                }
 
                 options.UseMySql(connectionString);
             });
