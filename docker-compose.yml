@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+    web:
+        build: .
+        ports:
+            - "80:80"
+            - "443:443"
+        depends_on:
+            - aloha-mysql
+    aloha-mysql:
+        image: hypriot/rpi-mysql:5.5
+        environment:
+            MYSQL_ROOT_PASSWORD: "aloha"
+            MYSQL_DATABASE: "aloha"
+            MYSQL_USER: "aloha"
+            MYSQL_PASSWORD: "aloha"
