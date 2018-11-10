@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Aloha.Migrations
+namespace Aloha.Model.Migrations
 {
     public partial class InitialMigration : Migration
     {
