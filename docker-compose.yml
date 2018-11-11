@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+    web:
+        build: .
+        ports:
+            - "80:80"
+            - "443:443"
+        depends_on:
+            - aloha-mysql
+        environment:
+            MYSQLCONNSTR_localdb: "Server=aloha-mysql;Port=3306;Database=aloha;Uid=aloha;Pwd=aloha;"
+    aloha-mysql:
+        image: mysql:5.5
+        environment:
+            MYSQL_ROOT_PASSWORD: "aloha"
+            MYSQL_DATABASE: "aloha"
+            MYSQL_USER: "aloha"
+            MYSQL_PASSWORD: "aloha"
