@@ -8,8 +8,6 @@ RUN dotnet restore
 COPY . .
 RUN dotnet build
 
-ENV MYSQLCONNSTR_localdb Server=aloha-mysql;Port=3306;Database=aloha;Uid=aloha;Pwd=aloha;
-
 EXPOSE 80
 EXPOSE 443
 
