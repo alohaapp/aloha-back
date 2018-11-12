@@ -21,7 +21,7 @@ namespace Aloha
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -29,7 +29,8 @@ namespace Aloha
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<RouteOptions>(options => {
+            services.Configure<RouteOptions>(options =>
+            {
                 options.LowercaseUrls = true;
             });
 
@@ -48,14 +49,15 @@ namespace Aloha
                 swagger.SwaggerDoc(SwaggerConfig.DocNameV1, info);
             });
 
-            services.AddDbContext<AlohaContext>(options => {
+            services.AddDbContext<AlohaContext>(options =>
+            {
                 string connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
                 string portNumber = Regex.Match(connectionString, @"(?<=Data Source.+:)\d+")?.Value;
 
                 if (portNumber != null && portNumber.Length > 0)
                 {
                     connectionString += ";Port=" + portNumber;
-                    connectionString = connectionString.Replace(":" + portNumber, "");
+                    connectionString = connectionString.Replace(":" + portNumber, string.Empty);
                 }
 
                 options.UseMySql(connectionString);
