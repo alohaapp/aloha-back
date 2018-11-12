@@ -4,7 +4,8 @@ using Aloha.Models.Contexts;
 
 namespace Aloha.Model.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T>
+        where T : class
     {
         private readonly AlohaContext dbContext;
 

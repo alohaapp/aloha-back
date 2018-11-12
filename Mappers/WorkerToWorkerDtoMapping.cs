@@ -5,15 +5,16 @@ public class WorkerToWorkerDtoMapping : IClassMapping<Worker, WorkerDto>
 {
     public WorkerDto Map(Worker worker)
     {
-        return new WorkerDto() {
+        return new WorkerDto()
+        {
             Id = worker.Id,
             Name = worker.Name,
             Surname = worker.Surname,
             PhotoUrl = worker.PhotoUrl,
             Email = worker.Email,
             Notes = worker.Notes,
-            UserId = worker.User == null ? null : (int?) worker.User.Id,
-            WorkstationId = worker.Workstation == null ? null : (int?) worker.Workstation.Id
+            UserId = worker.User == null ? null : (int?)worker.User.Id,
+            WorkstationId = worker.Workstation == null ? null : (int?)worker.Workstation.Id
         };
     }
 }

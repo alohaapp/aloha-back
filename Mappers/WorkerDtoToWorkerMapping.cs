@@ -5,7 +5,8 @@ public class WorkerDtoToWorkerMapping : IClassMapping<WorkerDto, Worker>
 {
     public Worker Map(WorkerDto workerDto)
     {
-        return new Worker() {
+        return new Worker()
+        {
             Name = workerDto.Name,
             Surname = workerDto.Surname,
             PhotoUrl = workerDto.PhotoUrl,
