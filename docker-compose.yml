@@ -17,3 +17,5 @@ services:
             MYSQL_DATABASE: "aloha"
             MYSQL_USER: "aloha"
             MYSQL_PASSWORD: "aloha"
+        volumes:
+            - ./mysql:/var/lib/mysql
