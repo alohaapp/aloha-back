@@ -80,7 +80,6 @@ namespace Aloha
             }
             else
             {
-                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 
