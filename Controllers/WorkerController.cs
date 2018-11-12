@@ -15,26 +15,25 @@ namespace Aloha.Controllers
     public class WorkerController : Controller
     {
         private readonly IRepository<Worker> workerRepository;
+        private readonly IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping;
+        private readonly IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping;
 
-        public WorkerController(IRepository<Worker> workerRepository)
+        public WorkerController(
+            IRepository<Worker> workerRepository,
+            IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping,
+            IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping
+        )
         {
             this.workerRepository = workerRepository;
+            this.workerToWorkerDtoMapping = workerToWorkerDtoMapping;
+            this.workerDtoToWorkerMapping = workerDtoToWorkerMapping;
         }
 
         [HttpGet]
         public List<WorkerDto> List()
         {
             return workerRepository.List()
-                .Select(worker => new WorkerDto() {
-                    Id = worker.Id,
-                    Name = worker.Name,
-                    Surname = worker.Surname,
-                    PhotoUrl = worker.PhotoUrl,
-                    Email = worker.Email,
-                    Notes = worker.Notes,
-                    UserId = worker.User == null ? null : (int?) worker.User.Id,
-                    WorkstationId = worker.Workstation == null ? null : (int?) worker.Workstation.Id
-                })
+                .Select(workerToWorkerDtoMapping.Map)
                 .ToList();
         }
 
@@ -43,30 +42,19 @@ namespace Aloha.Controllers
         {
             Worker worker = workerRepository.GetById(id);
 
-            return worker == null ? null : new WorkerDto() {
-                Id = worker.Id,
-                Name = worker.Name,
-                Surname = worker.Surname,
-                PhotoUrl = worker.PhotoUrl,
-                Email = worker.Email,
-                Notes = worker.Notes,
-                UserId = worker.User == null ? null : (int?) worker.User.Id,
-                WorkstationId = worker.Workstation == null ? null : (int?) worker.Workstation.Id
-            };
+            return worker == null
+                ? null
+                : workerToWorkerDtoMapping.Map(worker);
         }
 
         [HttpPost]
-        public void Add(WorkerDto workerDto)
+        public WorkerDto Add(WorkerDto workerDto)
         {
-            Worker worker = new Worker() {
-                Name = workerDto.Name,
-                Surname = workerDto.Surname,
-                PhotoUrl = workerDto.PhotoUrl,
-                Email = workerDto.Email,
-                Notes = workerDto.Notes
-            };
+            Worker worker = workerDtoToWorkerMapping.Map(workerDto);
 
             workerRepository.Add(worker);
+
+            return workerToWorkerDtoMapping.Map(worker);
         }
 
         [HttpDelete("{id}")]
