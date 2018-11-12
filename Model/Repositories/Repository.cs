@@ -16,25 +16,25 @@ namespace Aloha.Model.Repositories
 
         public virtual T GetById(int id)
         {
-            return this.dbContext.Set<T>().Find(id);
+            return dbContext.Set<T>().Find(id);
         }
 
         public virtual IEnumerable<T> List()
         {
-            return this.dbContext.Set<T>().AsEnumerable();
+            return dbContext.Set<T>().AsEnumerable();
         }
 
         public virtual void Add(T entity)
         {
-            this.dbContext.Set<T>().Add(entity);
-            this.dbContext.SaveChanges();
+            dbContext.Set<T>().Add(entity);
+            dbContext.SaveChanges();
         }
 
         public virtual void Remove(int id)
         {
-            T entity = this.GetById(id);
-            this.dbContext.Set<T>().Remove(entity);
-            this.dbContext.SaveChanges();
+            T entity = GetById(id);
+            dbContext.Set<T>().Remove(entity);
+            dbContext.SaveChanges();
         }
     }
 }
