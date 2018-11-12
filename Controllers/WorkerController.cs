@@ -21,8 +21,7 @@ namespace Aloha.Controllers
         public WorkerController(
             IRepository<Worker> workerRepository,
             IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping,
-            IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping
-        )
+            IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping)
         {
             this.workerRepository = workerRepository;
             this.workerToWorkerDtoMapping = workerToWorkerDtoMapping;
