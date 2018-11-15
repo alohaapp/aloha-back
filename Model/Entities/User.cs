@@ -12,6 +12,12 @@ namespace Aloha.Model.Entities
         [Required]
         public string Username { get; set; }
 
+        [Required]
+        public string PasswordHash { get; set; }
+        
+        [Required]
+        public string Salt { get; set; }
+
         public bool IsAdmin { get; set; }
 
         [ForeignKey(nameof(Worker))]

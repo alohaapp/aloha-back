@@ -13,6 +13,9 @@ namespace Aloha.Model.Entities
         [Required]
         public string Name { get; set; }
 
+        [Url]
+        public string ImageURL { get; set; }
+
         public virtual ICollection<Workstation> Workstations { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,16 +11,17 @@ namespace Aloha.Model.Entities
         public int Id { get; private set; }
 
         [Required]
-        public float X { get; set; }
+        public Decimal X { get; set; }
 
         [Required]
-        public float Y { get; set; }
+        public Decimal Y { get; set; }
 
         [ForeignKey(nameof(Worker))]
         public int? WorkerId { get; set; }
 
         public virtual Worker Worker { get; set; }
 
+        [Required]
         public virtual Floor Floor { get; set; }
     }
 }
