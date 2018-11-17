@@ -64,7 +64,7 @@ namespace Aloha
             });
 
             // Controllers
-            services.AddScoped<UserController, UserController>();
+            services.AddScoped<UsersController, UsersController>();
             services.AddScoped<WorkerController, WorkerController>();
 
             // Mappings

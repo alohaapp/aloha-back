@@ -11,13 +11,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Aloha.Controllers
 {
     [Route("api/v1/[controller]")]
-    public class UserController : Controller
+    public class UsersController : Controller
     {
         private readonly AlohaContext alohaContext;
         private readonly IClassMapping<User, UserDto> userToUserDtoMapping;
         private readonly IClassMapping<UserDto, User> userDtoToUserMapping;
 
-        public UserController(
+        public UsersController(
             AlohaContext alohaContext,
             IClassMapping<User, UserDto> userToUserDtoMapping,
             IClassMapping<UserDto, User> userDtoToUserMapping)
