@@ -36,6 +36,8 @@ namespace Aloha
                 options.LowercaseUrls = true;
             });
 
+            services.AddCors();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerGen(swagger =>
@@ -93,6 +95,12 @@ namespace Aloha
             {
                 app.UseHsts();
             }
+
+            app.UseCors(builder => 
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+            );
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
