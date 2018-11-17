@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Aloha.Model.Migrations
+namespace Aloha.Migrations
 {
     [DbContext(typeof(AlohaContext))]
     partial class AlohaContextModelSnapshot : ModelSnapshot
@@ -54,23 +54,10 @@ namespace Aloha.Model.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("IsAdmin");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired();
-
-                    b.Property<string>("Salt")
-                        .IsRequired();
-
                     b.Property<string>("UserName")
                         .IsRequired();
 
-                    b.Property<int?>("WorkerId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("WorkerId")
-                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -124,14 +111,6 @@ namespace Aloha.Model.Migrations
                     b.ToTable("Workstations");
                 });
 
-            modelBuilder.Entity("Aloha.Model.Entities.Worker", b =>
-                {
-                    b.HasOne("Aloha.Model.Entities.User", "User")
-                        .WithOne("Worker")
-                        .HasForeignKey("Aloha.Model.Entities.Worker", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Aloha.Model.Entities.Floor", b =>
                 {
                     b.HasOne("Aloha.Model.Entities.Office", "Office")
@@ -140,11 +119,12 @@ namespace Aloha.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Aloha.Model.Entities.User", b =>
+            modelBuilder.Entity("Aloha.Model.Entities.Worker", b =>
                 {
-                    b.HasOne("Aloha.Model.Entities.Worker", "Worker")
-                        .WithOne("User")
-                        .HasForeignKey("Aloha.Model.Entities.User", "WorkerId");
+                    b.HasOne("Aloha.Model.Entities.User", "User")
+                        .WithOne("Worker")
+                        .HasForeignKey("Aloha.Model.Entities.Worker", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Aloha.Model.Entities.Workstation", b =>
