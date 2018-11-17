@@ -31,6 +31,7 @@ namespace Aloha.Controllers
         public List<WorkerDto> List()
         {
             return alohaContext.Workers
+                .Include(w => w.User)
                 .Select(workerToWorkerDtoMapping.Map)
                 .ToList();
         }
@@ -38,7 +39,9 @@ namespace Aloha.Controllers
         [HttpGet("{id}")]
         public WorkerDto GetById(int id)
         {
-            Worker worker = alohaContext.Workers.Find(id);
+            Worker worker = alohaContext.Workers
+                .Include(w => w.User)
+                .Single(w => w.Id == id);
 
             return worker == null
                 ? null
@@ -46,17 +49,15 @@ namespace Aloha.Controllers
         }
 
         [HttpPost]
-        public WorkerDto Add(WorkerDto workerDto)
+        public WorkerDto Add([FromBody]WorkerDto workerDto)
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
-            
-            User user = alohaContext.Users.Find(worker.UserId);
+
+            User user = alohaContext.Users
+                .Include(u => u.Worker)
+                .Single(u => u.Id == worker.UserId);
 
             user.Worker = worker;
-            worker.User = user;
-            
-            alohaContext.Add(worker).State = EntityState.Added;
-            alohaContext.Entry(user).State = EntityState.Modified;
 
             alohaContext.SaveChanges();
 

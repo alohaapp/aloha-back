@@ -23,7 +23,7 @@ namespace Aloha.Model.Entities
         public string Notes { get; set; }
 
         [ForeignKey(nameof(User))]
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         public virtual User User { get; set; }

@@ -46,7 +46,7 @@ namespace Aloha.Controllers
         }
 
         [HttpPost]
-        public UserDto Add(UserDto userDto)
+        public UserDto Add([FromBody]UserDto userDto)
         {
             User user = userDtoToUserMapping.Map(userDto);
 
