@@ -11,10 +11,10 @@ namespace Aloha.Model.Entities
         public int Id { get; private set; }
 
         [Required]
-        public Decimal X { get; set; }
+        public decimal X { get; set; }
 
         [Required]
-        public Decimal Y { get; set; }
+        public decimal Y { get; set; }
 
         [ForeignKey(nameof(Worker))]
         public int? WorkerId { get; set; }

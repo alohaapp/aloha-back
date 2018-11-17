@@ -11,7 +11,8 @@ public class WorkerDtoToWorkerMapping : IClassMapping<WorkerDto, Worker>
             Surname = workerDto.Surname,
             PhotoUrl = workerDto.PhotoUrl,
             Email = workerDto.Email,
-            Notes = workerDto.Notes
+            Notes = workerDto.Notes,
+            UserId = workerDto.UserId
         };
     }
 }

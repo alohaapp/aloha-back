@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using Aloha.Controllers;
 using Aloha.Dtos;
 using Aloha.Model.Entities;
-using Aloha.Model.Repositories;
 using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,13 +63,13 @@ namespace Aloha
                 options.UseMySql(connectionString);
             });
 
-            // Repositories
-            services.AddScoped<IRepository<Worker>, Repository<Worker>>();
-
             // Controllers
+            services.AddScoped<UserController, UserController>();
             services.AddScoped<WorkerController, WorkerController>();
 
             // Mappings
+            services.AddScoped<IClassMapping<User, UserDto>, UserToUserDtoMapping>();
+            services.AddScoped<IClassMapping<UserDto, User>, UserDtoToUserMapping>();
             services.AddScoped<IClassMapping<Worker, WorkerDto>, WorkerToWorkerDtoMapping>();
             services.AddScoped<IClassMapping<WorkerDto, Worker>, WorkerDtoToWorkerMapping>();
         }

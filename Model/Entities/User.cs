@@ -10,18 +10,15 @@ namespace Aloha.Model.Entities
         public int Id { get; private set; }
 
         [Required]
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
-        [Required]
+        /*[Required]
         public string PasswordHash { get; set; }
-        
+
         [Required]
         public string Salt { get; set; }
 
-        public bool IsAdmin { get; set; }
-
-        [ForeignKey(nameof(Worker))]
-        public int? WorkerId { get; set; }
+        public bool IsAdmin { get; set; }*/
 
         public virtual Worker Worker { get; set; }
     }

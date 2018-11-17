@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aloha.Dtos;
 using Aloha.Model.Entities;
-using Aloha.Model.Repositories;
 using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,16 +13,16 @@ namespace Aloha.Controllers
     [Route("api/v1/[controller]")]
     public class WorkerController : Controller
     {
-        private readonly IRepository<Worker> workerRepository;
+        private readonly AlohaContext alohaContext;
         private readonly IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping;
         private readonly IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping;
 
         public WorkerController(
-            IRepository<Worker> workerRepository,
+            AlohaContext alohaContext,
             IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping,
             IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping)
         {
-            this.workerRepository = workerRepository;
+            this.alohaContext = alohaContext;
             this.workerToWorkerDtoMapping = workerToWorkerDtoMapping;
             this.workerDtoToWorkerMapping = workerDtoToWorkerMapping;
         }
@@ -31,7 +30,7 @@ namespace Aloha.Controllers
         [HttpGet]
         public List<WorkerDto> List()
         {
-            return workerRepository.List()
+            return alohaContext.Workers
                 .Select(workerToWorkerDtoMapping.Map)
                 .ToList();
         }
@@ -39,7 +38,7 @@ namespace Aloha.Controllers
         [HttpGet("{id}")]
         public WorkerDto GetById(int id)
         {
-            Worker worker = workerRepository.GetById(id);
+            Worker worker = alohaContext.Workers.Find(id);
 
             return worker == null
                 ? null
@@ -50,8 +49,16 @@ namespace Aloha.Controllers
         public WorkerDto Add(WorkerDto workerDto)
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
+            
+            User user = alohaContext.Users.Find(worker.UserId);
 
-            workerRepository.Add(worker);
+            user.Worker = worker;
+            worker.User = user;
+            
+            alohaContext.Add(worker).State = EntityState.Added;
+            alohaContext.Entry(user).State = EntityState.Modified;
+
+            alohaContext.SaveChanges();
 
             return workerToWorkerDtoMapping.Map(worker);
         }
@@ -59,7 +66,11 @@ namespace Aloha.Controllers
         [HttpDelete("{id}")]
         public void Remove(int id)
         {
-            workerRepository.Remove(id);
+            Worker worker = alohaContext.Workers.Find(id);
+            
+            alohaContext.Workers.Remove(worker);
+
+            alohaContext.SaveChanges();
         }
     }
 }
