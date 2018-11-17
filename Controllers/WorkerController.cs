@@ -48,7 +48,7 @@ namespace Aloha.Controllers
         }
 
         [HttpPost]
-        public WorkerDto Add(WorkerDto workerDto)
+        public WorkerDto Add([FromBody]WorkerDto workerDto)
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
 
