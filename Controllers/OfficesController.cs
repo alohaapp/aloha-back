@@ -11,13 +11,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Aloha.Controllers
 {
     [Route("api/v1/[controller]")]
-    public class OfficeController
+    public class OfficesController : Controller
     {
         private readonly AlohaContext dbContext;
         private readonly IClassMapping<Office, OfficeDto> officeToOfficeDtoMapping;
         private readonly IClassMapping<OfficeDto, Office> officeDtoToOfficeMapping;
 
-        public OfficeController(
+        public OfficesController(
             AlohaContext dbContext,
             IClassMapping<Office, OfficeDto> officeToOfficeDtoMapping,
             IClassMapping<OfficeDto, Office> officeDtoToOfficeMapping)

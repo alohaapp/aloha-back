@@ -13,13 +13,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Aloha.Controllers
 {
     [Route("api/v1/[controller]")]
-    public class WorkerController : Controller
+    public class WorkersController : Controller
     {
         private readonly IRepository<Worker> workerRepository;
         private readonly IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping;
         private readonly IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping;
 
-        public WorkerController(
+        public WorkersController(
             IRepository<Worker> workerRepository,
             IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping,
             IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping)
