@@ -3,7 +3,6 @@ using System.Linq;
 using Aloha.Dtos;
 using Aloha.Mappers;
 using Aloha.Model.Entities;
-using Aloha.Model.Repositories;
 using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

@@ -13,7 +13,8 @@ namespace Aloha.Mappers
                 Surname = workerDto.Surname,
                 PhotoUrl = workerDto.PhotoUrl,
                 Email = workerDto.Email,
-                Notes = workerDto.Notes
+                Notes = workerDto.Notes,
+                UserId = workerDto.UserId
             };
         }
     }
