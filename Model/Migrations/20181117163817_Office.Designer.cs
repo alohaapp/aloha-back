@@ -3,14 +3,16 @@ using System;
 using Aloha.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aloha.Model.Migrations
 {
     [DbContext(typeof(AlohaContext))]
-    partial class AlohaContextModelSnapshot : ModelSnapshot
+    [Migration("20181117163817_Office")]
+    partial class Office
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,7 +64,7 @@ namespace Aloha.Model.Migrations
                     b.Property<string>("Salt")
                         .IsRequired();
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Username")
                         .IsRequired();
 
                     b.Property<int?>("WorkerId");
@@ -91,12 +93,7 @@ namespace Aloha.Model.Migrations
 
                     b.Property<string>("Surname");
 
-                    b.Property<int>("UserId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Workers");
                 });
@@ -122,14 +119,6 @@ namespace Aloha.Model.Migrations
                         .IsUnique();
 
                     b.ToTable("Workstations");
-                });
-
-            modelBuilder.Entity("Aloha.Model.Entities.Worker", b =>
-                {
-                    b.HasOne("Aloha.Model.Entities.User", "User")
-                        .WithOne("Worker")
-                        .HasForeignKey("Aloha.Model.Entities.Worker", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Aloha.Model.Entities.Floor", b =>

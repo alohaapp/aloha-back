@@ -1,4 +1,5 @@
 using Aloha.Dtos;
+using Aloha.Mappers;
 using Aloha.Model.Entities;
 
 public class UserDtoToUserMapping : IClassMapping<UserDto, User>

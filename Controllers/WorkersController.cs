@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aloha.Dtos;
+using Aloha.Mappers;
 using Aloha.Model.Entities;
 using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +12,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Aloha.Controllers
 {
     [Route("api/v1/[controller]")]
-    public class WorkerController : Controller
+    public class WorkersController : Controller
     {
         private readonly AlohaContext alohaContext;
         private readonly IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping;
         private readonly IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping;
 
-        public WorkerController(
+        public WorkersController(
             AlohaContext alohaContext,
             IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping,
             IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping)

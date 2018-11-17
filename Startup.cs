@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using Aloha.Mappers;
 
 namespace Aloha
 {
@@ -33,6 +34,8 @@ namespace Aloha
             {
                 options.LowercaseUrls = true;
             });
+
+            services.AddCors();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -65,13 +68,19 @@ namespace Aloha
 
             // Controllers
             services.AddScoped<UsersController, UsersController>();
-            services.AddScoped<WorkerController, WorkerController>();
+            services.AddScoped<WorkersController, WorkersController>();
+            services.AddScoped<FloorsController, FloorsController>();
+            services.AddScoped<OfficesController, OfficesController>();
 
             // Mappings
             services.AddScoped<IClassMapping<User, UserDto>, UserToUserDtoMapping>();
             services.AddScoped<IClassMapping<UserDto, User>, UserDtoToUserMapping>();
             services.AddScoped<IClassMapping<Worker, WorkerDto>, WorkerToWorkerDtoMapping>();
             services.AddScoped<IClassMapping<WorkerDto, Worker>, WorkerDtoToWorkerMapping>();
+            services.AddScoped<IClassMapping<Floor, FloorDto>, FloorToFloorDtoMapping>();
+            services.AddScoped<IClassMapping<FloorDto, Floor>, FloorDtoToFloorMapping>();
+            services.AddScoped<IClassMapping<Office, OfficeDto>, OfficeToOfficeDtoMapping>();
+            services.AddScoped<IClassMapping<OfficeDto, Office>, OfficeDtoToOfficeMapping>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +97,12 @@ namespace Aloha
             {
                 app.UseHsts();
             }
+
+            app.UseCors(builder => 
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+            );
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

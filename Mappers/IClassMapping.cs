@@ -1,4 +1,7 @@
-public interface IClassMapping<TInput, TOutput>
+namespace Aloha.Mappers
 {
-    TOutput Map(TInput input);
+    public interface IClassMapping<TInput, TOutput>
+    {
+        TOutput Map(TInput input);
+    }
 }

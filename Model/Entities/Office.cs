@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Aloha.Model.Entities
 {
-    public class Floor
+    public class Office
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -13,12 +13,6 @@ namespace Aloha.Model.Entities
         [Required]
         public string Name { get; set; }
 
-        [Url]
-        public string ImageURL { get; set; }
-
-        [Required]
-        public virtual Office Office { get; set; }
-
-        public virtual ICollection<Workstation> Workstations { get; set; }
+        public virtual ICollection<Floor> Floors { get; set; }
     }
 }
