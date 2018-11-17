@@ -1,20 +1,24 @@
 using Aloha.Dtos;
+using Aloha.Mappers;
 using Aloha.Model.Entities;
 
-public class WorkerToWorkerDtoMapping : IClassMapping<Worker, WorkerDto>
+namespace Aloha.Mappers
 {
-    public WorkerDto Map(Worker worker)
+    public class WorkerToWorkerDtoMapping : IClassMapping<Worker, WorkerDto>
     {
-        return new WorkerDto()
+        public WorkerDto Map(Worker worker)
         {
-            Id = worker.Id,
-            Name = worker.Name,
-            Surname = worker.Surname,
-            PhotoUrl = worker.PhotoUrl,
-            Email = worker.Email,
-            Notes = worker.Notes,
-            UserId = worker.User == null ? null : (int?)worker.User.Id,
-            WorkstationId = worker.Workstation == null ? null : (int?)worker.Workstation.Id
-        };
+            return new WorkerDto()
+            {
+                Id = worker.Id,
+                Name = worker.Name,
+                Surname = worker.Surname,
+                PhotoUrl = worker.PhotoUrl,
+                Email = worker.Email,
+                Notes = worker.Notes,
+                UserId = worker.User == null ? null : (int?)worker.User.Id,
+                WorkstationId = worker.Workstation == null ? null : (int?)worker.Workstation.Id
+            };
+        }
     }
 }

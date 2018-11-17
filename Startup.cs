@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using Aloha.Mappers;
 
 namespace Aloha
 {
@@ -71,10 +72,13 @@ namespace Aloha
 
             // Controllers
             services.AddScoped<WorkerController, WorkerController>();
+            services.AddScoped<FloorController, FloorController>();
 
             // Mappings
             services.AddScoped<IClassMapping<Worker, WorkerDto>, WorkerToWorkerDtoMapping>();
             services.AddScoped<IClassMapping<WorkerDto, Worker>, WorkerDtoToWorkerMapping>();
+            services.AddScoped<IClassMapping<Floor, FloorDto>, FloorToFloorDtoMapping>();
+            services.AddScoped<IClassMapping<FloorDto, Floor>, FloorDtoToFloorMapping>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
