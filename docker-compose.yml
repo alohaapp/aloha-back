@@ -12,6 +12,8 @@ services:
             MYSQLCONNSTR_localdb: "Server=aloha-mysql;Port=3306;Database=aloha;Uid=aloha;Pwd=aloha;"
     aloha-mysql:
         image: mysql:5.5
+        ports: # Development Only!
+            - "3306:3306"
         environment:
             MYSQL_ROOT_PASSWORD: "aloha"
             MYSQL_DATABASE: "aloha"
