@@ -49,7 +49,7 @@ namespace Aloha.Controllers
         }
 
         [HttpPost]
-        public OfficeDto Add(OfficeDto officeDto)
+        public OfficeDto Add([FromBody]OfficeDto officeDto)
         {
             Office office = officeDtoToOfficeMapping.Map(officeDto);
 

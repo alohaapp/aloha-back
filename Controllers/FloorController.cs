@@ -50,7 +50,7 @@ namespace Aloha.Controllers
         }
 
         [HttpPost]
-        public FloorDto Add(FloorDto floorDto)
+        public FloorDto Add([FromBody]FloorDto floorDto)
         {
             Floor floor = floorDtoToFloorMapping.Map(floorDto);
 
