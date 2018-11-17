@@ -17,5 +17,7 @@ namespace Aloha.Models.Contexts
         public DbSet<Workstation> Workstations { get; set; }
 
         public DbSet<Floor> Floors { get; set; }
+
+        public DbSet<Office> Offices { get; set; }
     }
 }

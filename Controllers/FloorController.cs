@@ -6,6 +6,7 @@ using Aloha.Model.Entities;
 using Aloha.Model.Repositories;
 using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
@@ -30,6 +31,7 @@ namespace Aloha.Controllers
         public List<FloorDto> List()
         {
             return dbContext.Set<Floor>()
+                .Include(f => f.Office)
                 .AsEnumerable()
                 .Select(floorToFloorDtoMapping.Map)
                 .ToList();
@@ -39,7 +41,8 @@ namespace Aloha.Controllers
         public FloorDto Get(int id)
         {
             Floor floor = dbContext.Set<Floor>()
-                .Find(id);
+                .Include(f => f.Office)
+                .Single(f => f.Id == id);
 
             return floor == null
                 ? null
@@ -47,14 +50,15 @@ namespace Aloha.Controllers
         }
 
         [HttpPost]
-        public FloorDto Add(FloorDto floorDto)
+        public FloorDto Add([FromBody]FloorDto floorDto)
         {
-            
             Floor floor = floorDtoToFloorMapping.Map(floorDto);
 
-            dbContext.Set<Floor>()
-                .Add(floor);
-                
+            Office office = dbContext.Offices
+                .Include(o => o.Floors)
+                .SingleOrDefault(o => o.Id == floorDto.OfficeId);
+
+            office.Floors.Add(floor);
 
             dbContext.SaveChanges();
 
