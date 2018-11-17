@@ -71,9 +71,9 @@ namespace Aloha
             services.AddScoped<IRepository<Worker>, Repository<Worker>>();
 
             // Controllers
-            services.AddScoped<WorkerController, WorkerController>();
-            services.AddScoped<FloorController, FloorController>();
-            services.AddScoped<OfficeController, OfficeController>();
+            services.AddScoped<WorkersController, WorkersController>();
+            services.AddScoped<FloorsController, FloorsController>();
+            services.AddScoped<OfficesController, OfficesController>();
 
             // Mappings
             services.AddScoped<IClassMapping<Worker, WorkerDto>, WorkerToWorkerDtoMapping>();
