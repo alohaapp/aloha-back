@@ -3,14 +3,16 @@ using System;
 using Aloha.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aloha.Model.Migrations
 {
     [DbContext(typeof(AlohaContext))]
-    partial class AlohaContextModelSnapshot : ModelSnapshot
+    [Migration("20181117181454_RequiredUserToWorker")]
+    partial class RequiredUserToWorker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,26 +29,9 @@ namespace Aloha.Model.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int>("OfficeId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("OfficeId");
 
                     b.ToTable("Floors");
-                });
-
-            modelBuilder.Entity("Aloha.Model.Entities.Office", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Offices");
                 });
 
             modelBuilder.Entity("Aloha.Model.Entities.User", b =>
@@ -54,23 +39,10 @@ namespace Aloha.Model.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("IsAdmin");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired();
-
-                    b.Property<string>("Salt")
-                        .IsRequired();
-
                     b.Property<string>("UserName")
                         .IsRequired();
 
-                    b.Property<int?>("WorkerId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("WorkerId")
-                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -130,21 +102,6 @@ namespace Aloha.Model.Migrations
                         .WithOne("Worker")
                         .HasForeignKey("Aloha.Model.Entities.Worker", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Aloha.Model.Entities.Floor", b =>
-                {
-                    b.HasOne("Aloha.Model.Entities.Office", "Office")
-                        .WithMany("Floors")
-                        .HasForeignKey("OfficeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Aloha.Model.Entities.User", b =>
-                {
-                    b.HasOne("Aloha.Model.Entities.Worker", "Worker")
-                        .WithOne("User")
-                        .HasForeignKey("Aloha.Model.Entities.User", "WorkerId");
                 });
 
             modelBuilder.Entity("Aloha.Model.Entities.Workstation", b =>
