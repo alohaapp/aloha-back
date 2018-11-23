@@ -53,13 +53,14 @@ namespace Aloha.Controllers
         public WorkerDto Add([FromBody]WorkerDto workerDto)
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
+            
+            User user = new User() 
+            { 
+                UserName = workerDto.UserName, 
+                Worker = worker 
+            };
 
-            User user = alohaContext.Users
-                .Include(u => u.Worker)
-                .Single(u => u.Id == worker.UserId);
-
-            user.Worker = worker;
-
+            alohaContext.Users.Add(user);
             alohaContext.SaveChanges();
 
             return workerToWorkerDtoMapping.Map(worker);

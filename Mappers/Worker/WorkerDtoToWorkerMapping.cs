@@ -14,7 +14,6 @@ namespace Aloha.Mappers
                 PhotoUrl = workerDto.PhotoUrl,
                 Email = workerDto.Email,
                 Notes = workerDto.Notes,
-                UserId = workerDto.UserId
             };
         }
     }

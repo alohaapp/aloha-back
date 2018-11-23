@@ -16,8 +16,9 @@ namespace Aloha.Mappers
                 PhotoUrl = worker.PhotoUrl,
                 Email = worker.Email,
                 Notes = worker.Notes,
-                UserId = worker.User.Id,
-                WorkstationId = worker.Workstation == null ? null : (int?)worker.Workstation.Id
+                WorkstationId = worker.Workstation == null ? null : (int?)worker.Workstation.Id,
+                
+                UserName = worker.User.UserName
             };
         }
     }
