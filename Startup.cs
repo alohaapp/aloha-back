@@ -84,6 +84,7 @@ namespace Aloha
 
             // Updaters
             services.AddScoped<IEntityUpdater<Floor>, FloorUpdater>();
+            services.AddScoped<IEntityUpdater<Office>, OfficeUpdater>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
