@@ -15,15 +15,18 @@ namespace Aloha.Controllers
         private readonly AlohaContext dbContext;
         private readonly IClassMapping<Floor, FloorDto> floorToFloorDtoMapping;
         private readonly IClassMapping<FloorDto, Floor> floorDtoToFloorMapping;
+        private readonly IEntityUpdater<Floor> floorUpdater;
 
         public FloorsController(
             AlohaContext dbContext,
             IClassMapping<Floor, FloorDto> floorToFloorDtoMapping,
-            IClassMapping<FloorDto, Floor> floorDtoToFloorMapping)
+            IClassMapping<FloorDto, Floor> floorDtoToFloorMapping,
+            IEntityUpdater<Floor> floorUpdater)
         {
             this.dbContext = dbContext;
             this.floorToFloorDtoMapping = floorToFloorDtoMapping;
             this.floorDtoToFloorMapping = floorDtoToFloorMapping;
+            this.floorUpdater = floorUpdater;
         }
 
         [HttpGet]
@@ -62,6 +65,22 @@ namespace Aloha.Controllers
             dbContext.SaveChanges();
 
             return floorToFloorDtoMapping.Map(floor);
+        }
+
+        [HttpPut]
+        public FloorDto Update([FromBody]FloorDto floorDto)
+        {
+            Floor floor = floorDtoToFloorMapping.Map(floorDto);
+
+            Floor actualFloor = dbContext.Floors
+                .Include(f => f.Office)
+                .SingleOrDefault(f => f.Id == floorDto.Id);
+
+            floorUpdater.Update(actualFloor, floor);
+
+            dbContext.SaveChanges();
+
+            return floorToFloorDtoMapping.Map(actualFloor);
         }
 
         [HttpDelete("{id}")]
