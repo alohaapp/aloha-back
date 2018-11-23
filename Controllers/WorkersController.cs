@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
+    [ApiController]
     [Route("api/v1/[controller]")]
     public class WorkersController : Controller
     {
@@ -69,7 +70,7 @@ namespace Aloha.Controllers
         public void Remove(int id)
         {
             Worker worker = alohaContext.Workers.Find(id);
-            
+
             alohaContext.Workers.Remove(worker);
 
             alohaContext.SaveChanges();

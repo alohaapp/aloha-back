@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
+    [ApiController]
     [Route("api/v1/[controller]")]
     public class OfficesController : Controller
     {
