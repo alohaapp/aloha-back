@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
+    [Obsolete("Users won't be a part of the public API, they'll be created and served in WorkersController.")]
     [Route("api/v1/[controller]")]
     public class UsersController : Controller
     {
