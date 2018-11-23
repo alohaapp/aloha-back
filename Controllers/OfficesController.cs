@@ -31,6 +31,7 @@ namespace Aloha.Controllers
         {
             return dbContext.Offices
                 .Include(o => o.Floors)
+                    .ThenInclude(f => f.Workstations)
                 .Select(officeToOfficeDtoMapping.Map)
                 .ToList();
         }
@@ -40,6 +41,7 @@ namespace Aloha.Controllers
         {
             Office office = dbContext.Offices
                 .Include(o => o.Floors)
+                    .ThenInclude(f => f.Workstations)
                 .Single(o => o.Id == id);
 
             return office == null

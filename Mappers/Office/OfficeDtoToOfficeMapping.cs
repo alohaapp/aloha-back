@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using Aloha.Dtos;
 using Aloha.Model.Entities;
 
 namespace Aloha.Mappers
 {
-    public class OfficeToOfficeDtoMapping : IClassMapping<Office, OfficeDto>
+    public class OfficeDtoToOfficeMapping : IClassMapping<OfficeDto, Office>
     {
-        public OfficeDto Map(Office office)
+        public Office Map(OfficeDto officeDto)
         {
-            return new OfficeDto()
+            return new Office()
             {
-                Id = office.Id,
-                Name = office.Name
+                Name = officeDto.Name,
+                Floors = new List<Floor>()
             };
         }
     }
