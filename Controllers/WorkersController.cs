@@ -57,11 +57,11 @@ namespace Aloha.Controllers
         public WorkerDto Add([FromBody]WorkerDto workerDto)
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
-            
-            User user = new User() 
-            { 
-                UserName = workerDto.UserName, 
-                Worker = worker 
+
+            User user = new User()
+            {
+                UserName = workerDto.UserName,
+                Worker = worker
             };
 
             alohaContext.Users.Add(user);
@@ -95,7 +95,7 @@ namespace Aloha.Controllers
 
             alohaContext.Workers.Remove(worker);
             alohaContext.Users.Remove(worker.User);
-            
+
             alohaContext.SaveChanges();
         }
     }

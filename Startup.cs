@@ -2,6 +2,7 @@ using System;
 using System.Text.RegularExpressions;
 using Aloha.Controllers;
 using Aloha.Dtos;
+using Aloha.Mappers;
 using Aloha.Model.Entities;
 using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Builder;
@@ -14,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using Aloha.Mappers;
 
 namespace Aloha
 {
@@ -102,11 +102,10 @@ namespace Aloha
                 app.UseHsts();
             }
 
-            app.UseCors(builder => 
-                builder.AllowAnyOrigin()
+            app.UseCors(builder => builder
+                    .AllowAnyOrigin()
                     .AllowAnyHeader()
-                    .AllowAnyMethod()
-            );
+                    .AllowAnyMethod());
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

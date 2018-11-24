@@ -17,7 +17,7 @@ namespace Aloha.Mappers
                 Email = worker.Email,
                 Notes = worker.Notes,
                 WorkstationId = worker.Workstation == null ? null : (int?)worker.Workstation.Id,
-                
+
                 UserName = worker.User.UserName
             };
         }
