@@ -6,6 +6,7 @@ using Aloha.Dtos;
 using Aloha.Mappers;
 using Aloha.Model.Entities;
 using Aloha.Models.Contexts;
+using Aloha.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,15 +17,18 @@ namespace Aloha.Controllers
     public class UsersController : Controller
     {
         private readonly AlohaContext alohaContext;
+        private readonly IUserService userService;
         private readonly IClassMapping<User, UserDto> userToUserDtoMapping;
         private readonly IClassMapping<UserDto, User> userDtoToUserMapping;
 
         public UsersController(
             AlohaContext alohaContext,
+            IUserService userService,
             IClassMapping<User, UserDto> userToUserDtoMapping,
             IClassMapping<UserDto, User> userDtoToUserMapping)
         {
             this.alohaContext = alohaContext;
+            this.userService = userService;
             this.userToUserDtoMapping = userToUserDtoMapping;
             this.userDtoToUserMapping = userDtoToUserMapping;
         }
@@ -51,6 +55,8 @@ namespace Aloha.Controllers
         public UserDto Add([FromBody]UserDto userDto)
         {
             User user = userDtoToUserMapping.Map(userDto);
+
+            user.PasswordHash = userService.HashPassword("test");
 
             alohaContext.Users.Add(user);
 

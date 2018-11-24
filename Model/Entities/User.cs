@@ -12,10 +12,10 @@ namespace Aloha.Model.Entities
         [Required]
         public string UserName { get; set; }
 
-        /*[Required]
+        [Required]
         public string PasswordHash { get; set; }
 
-        [Required]
+        /*[Required]
         public string Salt { get; set; }
 
         public bool IsAdmin { get; set; }*/
