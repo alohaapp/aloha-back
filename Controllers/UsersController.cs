@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Aloha.Controllers
 {
     [Obsolete("Users won't be a part of the public API, they'll be created and served in WorkersController.")]
+    [ApiController]
     [Route("api/v1/[controller]")]
     public class UsersController : Controller
     {
@@ -63,7 +64,7 @@ namespace Aloha.Controllers
         public void Remove(int id)
         {
             User user = alohaContext.Users.Find(id);
-            
+
             alohaContext.Users.Remove(user);
 
             alohaContext.SaveChanges();

@@ -9,21 +9,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
+    [ApiController]
     [Route("api/v1/[controller]")]
     public class OfficesController : Controller
     {
         private readonly AlohaContext dbContext;
         private readonly IClassMapping<Office, OfficeDto> officeToOfficeDtoMapping;
         private readonly IClassMapping<OfficeDto, Office> officeDtoToOfficeMapping;
+        private readonly IEntityUpdater<Office> officeUpdater;
 
         public OfficesController(
             AlohaContext dbContext,
             IClassMapping<Office, OfficeDto> officeToOfficeDtoMapping,
-            IClassMapping<OfficeDto, Office> officeDtoToOfficeMapping)
+            IClassMapping<OfficeDto, Office> officeDtoToOfficeMapping,
+            IEntityUpdater<Office> officeUpdater)
         {
             this.dbContext = dbContext;
             this.officeToOfficeDtoMapping = officeToOfficeDtoMapping;
             this.officeDtoToOfficeMapping = officeDtoToOfficeMapping;
+            this.officeUpdater = officeUpdater;
         }
 
         [HttpGet]
@@ -60,6 +64,22 @@ namespace Aloha.Controllers
             dbContext.SaveChanges();
 
             return officeToOfficeDtoMapping.Map(office);
+        }
+
+        [HttpPut]
+        public OfficeDto Update([FromBody]OfficeDto officeDto)
+        {
+            Office office = officeDtoToOfficeMapping.Map(officeDto);
+
+            Office actualOffice = dbContext.Offices
+                .Include(f => f.Floors)
+                .SingleOrDefault(f => f.Id == officeDto.Id);
+
+            officeUpdater.Update(actualOffice, office);
+
+            dbContext.SaveChanges();
+
+            return officeToOfficeDtoMapping.Map(actualOffice);
         }
 
         [HttpDelete("{id}")]

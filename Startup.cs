@@ -80,6 +80,10 @@ namespace Aloha
             services.AddScoped<IClassMapping<FloorDto, Floor>, FloorDtoToFloorMapping>();
             services.AddScoped<IClassMapping<Office, OfficeDto>, OfficeToOfficeDtoMapping>();
             services.AddScoped<IClassMapping<OfficeDto, Office>, OfficeDtoToOfficeMapping>();
+
+            // Updaters
+            services.AddScoped<IEntityUpdater<Floor>, FloorUpdater>();
+            services.AddScoped<IEntityUpdater<Office>, OfficeUpdater>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

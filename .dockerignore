@@ -1,3 +1,9 @@
+.git
+.gitignore
 bin
 obj
 mysql
+
+LICENSE
+README.md
+docker-compose.yml
