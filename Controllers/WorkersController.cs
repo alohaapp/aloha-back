@@ -70,14 +70,14 @@ namespace Aloha.Controllers
             return workerToWorkerDtoMapping.Map(worker);
         }
 
-        [HttpPut]
-        public WorkerDto Update([FromBody]WorkerDto workerDto)
+        [HttpPut("{id}")]
+        public WorkerDto Update(int id, [FromBody]WorkerDto workerDto)
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
 
             Worker actualWorker = alohaContext.Workers
                 .Include(f => f.User)
-                .SingleOrDefault(f => f.Id == workerDto.Id);
+                .SingleOrDefault(f => f.Id == id);
 
             workerUpdater.Update(actualWorker, worker);
 

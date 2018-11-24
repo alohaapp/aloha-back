@@ -66,14 +66,14 @@ namespace Aloha.Controllers
             return officeToOfficeDtoMapping.Map(office);
         }
 
-        [HttpPut]
-        public OfficeDto Update([FromBody]OfficeDto officeDto)
+        [HttpPut("{id}")]
+        public OfficeDto Update(int id, [FromBody]OfficeDto officeDto)
         {
             Office office = officeDtoToOfficeMapping.Map(officeDto);
 
             Office actualOffice = dbContext.Offices
                 .Include(f => f.Floors)
-                .SingleOrDefault(f => f.Id == officeDto.Id);
+                .SingleOrDefault(f => f.Id == id);
 
             officeUpdater.Update(actualOffice, office);
 

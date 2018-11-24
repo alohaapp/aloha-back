@@ -103,9 +103,9 @@ namespace Aloha
             }
 
             app.UseCors(builder => builder
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod());
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

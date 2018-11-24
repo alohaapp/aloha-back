@@ -68,14 +68,14 @@ namespace Aloha.Controllers
             return floorToFloorDtoMapping.Map(floor);
         }
 
-        [HttpPut]
-        public FloorDto Update([FromBody]FloorDto floorDto)
+        [HttpPut("{id}")]
+        public FloorDto Update(int id, [FromBody]FloorDto floorDto)
         {
             Floor floor = floorDtoToFloorMapping.Map(floorDto);
 
             Floor actualFloor = dbContext.Floors
                 .Include(f => f.Office)
-                .SingleOrDefault(f => f.Id == floorDto.Id);
+                .SingleOrDefault(f => f.Id == id);
 
             floorUpdater.Update(actualFloor, floor);
 
