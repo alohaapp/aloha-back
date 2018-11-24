@@ -15,6 +15,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Aloha.Mappers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Aloha.Services;
 
 namespace Aloha
 {
@@ -85,7 +89,10 @@ namespace Aloha
                 options.UseMySql(connectionString);
             });
 
+            services.AddScoped<IUserService, UserService>();
+
             // Controllers
+            services.AddScoped<SecurityController, SecurityController>();
             services.AddScoped<UsersController, UsersController>();
             services.AddScoped<WorkersController, WorkersController>();
             services.AddScoped<FloorsController, FloorsController>();
