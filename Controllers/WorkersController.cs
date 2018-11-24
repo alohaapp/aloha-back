@@ -54,13 +54,14 @@ namespace Aloha.Controllers
         public WorkerDto Add([FromBody]WorkerDto workerDto)
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
+            
+            User user = new User() 
+            { 
+                UserName = workerDto.UserName, 
+                Worker = worker 
+            };
 
-            User user = alohaContext.Users
-                .Include(u => u.Worker)
-                .Single(u => u.Id == worker.UserId);
-
-            user.Worker = worker;
-
+            alohaContext.Users.Add(user);
             alohaContext.SaveChanges();
 
             return workerToWorkerDtoMapping.Map(worker);
@@ -69,10 +70,13 @@ namespace Aloha.Controllers
         [HttpDelete("{id}")]
         public void Remove(int id)
         {
-            Worker worker = alohaContext.Workers.Find(id);
+            Worker worker = alohaContext.Workers
+                .Include(w => w.User)
+                .Single(w => w.Id == id);
 
             alohaContext.Workers.Remove(worker);
-
+            alohaContext.Users.Remove(worker.User);
+            
             alohaContext.SaveChanges();
         }
     }
