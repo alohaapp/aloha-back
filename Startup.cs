@@ -82,6 +82,7 @@ namespace Aloha
             services.AddScoped<IClassMapping<OfficeDto, Office>, OfficeDtoToOfficeMapping>();
 
             // Updaters
+            services.AddScoped<IEntityUpdater<Worker>, WorkerUpdater>();
             services.AddScoped<IEntityUpdater<Floor>, FloorUpdater>();
             services.AddScoped<IEntityUpdater<Office>, OfficeUpdater>();
         }

@@ -18,15 +18,18 @@ namespace Aloha.Controllers
         private readonly AlohaContext alohaContext;
         private readonly IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping;
         private readonly IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping;
+        private readonly IEntityUpdater<Worker> workerUpdater;
 
         public WorkersController(
             AlohaContext alohaContext,
             IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping,
-            IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping)
+            IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping,
+            IEntityUpdater<Worker> workerUpdater)
         {
             this.alohaContext = alohaContext;
             this.workerToWorkerDtoMapping = workerToWorkerDtoMapping;
             this.workerDtoToWorkerMapping = workerDtoToWorkerMapping;
+            this.workerUpdater = workerUpdater;
         }
 
         [HttpGet]
@@ -65,6 +68,22 @@ namespace Aloha.Controllers
             alohaContext.SaveChanges();
 
             return workerToWorkerDtoMapping.Map(worker);
+        }
+
+        [HttpPut]
+        public WorkerDto Update([FromBody]WorkerDto workerDto)
+        {
+            Worker worker = workerDtoToWorkerMapping.Map(workerDto);
+
+            Worker actualWorker = alohaContext.Workers
+                .Include(f => f.User)
+                .SingleOrDefault(f => f.Id == workerDto.Id);
+
+            workerUpdater.Update(actualWorker, worker);
+
+            alohaContext.SaveChanges();
+
+            return workerToWorkerDtoMapping.Map(actualWorker);
         }
 
         [HttpDelete("{id}")]
