@@ -69,10 +69,13 @@ namespace Aloha.Controllers
         [HttpDelete("{id}")]
         public void Remove(int id)
         {
-            Worker worker = alohaContext.Workers.Find(id);
-            
-            alohaContext.Workers.Remove(worker);
+            Worker worker = alohaContext.Workers
+                .Include(w => w.User)
+                .Single(w => w.Id == id);
 
+            alohaContext.Workers.Remove(worker);
+            alohaContext.Users.Remove(worker.User);
+            
             alohaContext.SaveChanges();
         }
     }
