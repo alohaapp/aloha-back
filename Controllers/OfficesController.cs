@@ -72,7 +72,8 @@ namespace Aloha.Controllers
             Office office = officeDtoToOfficeMapping.Map(officeDto);
 
             Office actualOffice = dbContext.Offices
-                .Include(f => f.Floors)
+                .Include(o => o.Floors)
+                    .ThenInclude(f => f.Workstations)
                 .SingleOrDefault(f => f.Id == id);
 
             officeUpdater.Update(actualOffice, office);

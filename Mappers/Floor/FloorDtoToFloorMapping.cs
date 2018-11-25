@@ -11,8 +11,7 @@ namespace Aloha.Mappers
             return new Floor()
             {
                 Name = input.Name,
-                ImageURL = input.ImageUrl,
-                Workstations = input.Workstations
+                ImageURL = input.ImageUrl
             };
         }
     }
