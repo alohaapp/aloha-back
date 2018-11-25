@@ -10,10 +10,8 @@ namespace Aloha.Model.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; private set; }
 
-        [Required]
         public decimal X { get; set; }
 
-        [Required]
         public decimal Y { get; set; }
 
         [ForeignKey(nameof(Worker))]
