@@ -16,17 +16,20 @@ namespace Aloha.Controllers
         private readonly AlohaContext dbContext;
         private readonly IClassMapping<Floor, FloorDto> floorToFloorDtoMapping;
         private readonly IClassMapping<FloorDto, Floor> floorDtoToFloorMapping;
+        private readonly IClassMapping<Workstation, WorkstationDto> workstationToWorkstationDtoMapping;
         private readonly IEntityUpdater<Floor> floorUpdater;
 
         public FloorsController(
             AlohaContext dbContext,
             IClassMapping<Floor, FloorDto> floorToFloorDtoMapping,
             IClassMapping<FloorDto, Floor> floorDtoToFloorMapping,
+            IClassMapping<Workstation, WorkstationDto> workstationToWorkstationDtoMapping,
             IEntityUpdater<Floor> floorUpdater)
         {
             this.dbContext = dbContext;
             this.floorToFloorDtoMapping = floorToFloorDtoMapping;
             this.floorDtoToFloorMapping = floorDtoToFloorMapping;
+            this.workstationToWorkstationDtoMapping = workstationToWorkstationDtoMapping;
             this.floorUpdater = floorUpdater;
         }
 
@@ -35,7 +38,6 @@ namespace Aloha.Controllers
         {
             return dbContext.Set<Floor>()
                 .Include(f => f.Office)
-                .Include(f => f.Workstations)
                 .Select(floorToFloorDtoMapping.Map)
                 .ToList();
         }
@@ -45,12 +47,21 @@ namespace Aloha.Controllers
         {
             Floor floor = dbContext.Set<Floor>()
                 .Include(f => f.Office)
-                .Include(f => f.Workstations)
                 .Single(f => f.Id == id);
 
             return floor == null
                 ? null
                 : floorToFloorDtoMapping.Map(floor);
+        }
+
+        [HttpGet("{id}/Workstations")]
+        public List<WorkstationDto> ListWorkstations(int id)
+        {
+            return dbContext.Floors
+                .Include(f => f.Workstations)
+                .Single(f => f.Id == id)?.Workstations
+                .Select(workstationToWorkstationDtoMapping.Map)
+                .ToList();
         }
 
         [HttpPost]
@@ -76,7 +87,6 @@ namespace Aloha.Controllers
 
             Floor actualFloor = dbContext.Floors
                 .Include(f => f.Office)
-                .Include(f => f.Workstations)
                 .SingleOrDefault(f => f.Id == id);
 
             floorUpdater.Update(actualFloor, floor);
