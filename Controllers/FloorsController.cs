@@ -35,7 +35,6 @@ namespace Aloha.Controllers
         {
             return dbContext.Set<Floor>()
                 .Include(f => f.Office)
-                .AsEnumerable()
                 .Select(floorToFloorDtoMapping.Map)
                 .ToList();
         }

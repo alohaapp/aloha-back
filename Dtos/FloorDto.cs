@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Aloha.Model.Entities;
 
 namespace Aloha.Dtos
 {

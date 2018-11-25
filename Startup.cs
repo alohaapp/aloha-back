@@ -68,6 +68,7 @@ namespace Aloha
 
             // Controllers
             services.AddScoped<WorkersController, WorkersController>();
+            services.AddScoped<WorkstationsController, WorkstationsController>();
             services.AddScoped<FloorsController, FloorsController>();
             services.AddScoped<OfficesController, OfficesController>();
 
@@ -76,6 +77,8 @@ namespace Aloha
             services.AddScoped<IClassMapping<UserDto, User>, UserDtoToUserMapping>();
             services.AddScoped<IClassMapping<Worker, WorkerDto>, WorkerToWorkerDtoMapping>();
             services.AddScoped<IClassMapping<WorkerDto, Worker>, WorkerDtoToWorkerMapping>();
+            services.AddScoped<IClassMapping<Workstation, WorkstationDto>, WorkstationToWorkstationDtoMapping>();
+            services.AddScoped<IClassMapping<WorkstationDto, Workstation>, WorkstationDtoToWorkstationMapping>();
             services.AddScoped<IClassMapping<Floor, FloorDto>, FloorToFloorDtoMapping>();
             services.AddScoped<IClassMapping<FloorDto, Floor>, FloorDtoToFloorMapping>();
             services.AddScoped<IClassMapping<Office, OfficeDto>, OfficeToOfficeDtoMapping>();
@@ -83,6 +86,7 @@ namespace Aloha
 
             // Updaters
             services.AddScoped<IEntityUpdater<Worker>, WorkerUpdater>();
+            services.AddScoped<IEntityUpdater<Workstation>, WorkstationUpdater>();
             services.AddScoped<IEntityUpdater<Floor>, FloorUpdater>();
             services.AddScoped<IEntityUpdater<Office>, OfficeUpdater>();
         }
