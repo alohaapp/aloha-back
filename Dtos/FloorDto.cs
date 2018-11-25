@@ -15,7 +15,5 @@ namespace Aloha.Dtos
         public string ImageUrl { get; set; }
 
         public int OfficeId { get; set; }
-
-        public ICollection<Workstation> Workstations { get; set; }
     }
 }
