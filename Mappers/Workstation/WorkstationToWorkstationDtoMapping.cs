@@ -10,6 +10,7 @@ namespace Aloha.Mappers
         {
             return new WorkstationDto()
             {
+                Id = input.Id,
                 X = input.X,
                 Y = input.Y,
                 WorkerId = input.WorkerId,
