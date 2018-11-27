@@ -22,9 +22,20 @@ namespace Aloha.Models.Contexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<User>()
+                .HasAlternateKey(u => u.UserName);
             builder.Entity<Worker>()
                 .HasIndex(u => u.UserId)
                 .IsUnique();
+
+            // Seed
+            builder.Entity<User>()
+                .HasData(new User
+                {
+                    Id = 1,
+                    UserName = "admin",
+                    PasswordHash = "8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918" // admin
+                });
         }
     }
 }
