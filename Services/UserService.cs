@@ -18,7 +18,7 @@ namespace Aloha.Services
             this.dbContext = dbContext;
         }
 
-        public string Authenticate(string username, string password)
+        public string GenerateJwtToken(string username, string password)
         {
             string passwordHash = SHA256HexHashString(password);
             var user = dbContext.Users.SingleOrDefault(x => x.UserName == username && x.PasswordHash == passwordHash);

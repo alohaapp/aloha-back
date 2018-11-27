@@ -32,7 +32,6 @@ namespace Aloha.Controllers
             return Ok(token);
         }
 
-        [Authorize]
         [HttpPost("check")]
         public void Check()
         {
