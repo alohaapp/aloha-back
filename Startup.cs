@@ -53,7 +53,8 @@ namespace Aloha
             })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var key = Encoding.ASCII.GetBytes("aloha-test_123456789");
+            var key = Encoding.ASCII.GetBytes(Configuration["JwtKey"]);
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -117,7 +118,7 @@ namespace Aloha
             });
 
             // Services
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISecurityService, SecurityService>();
 
             // Controllers
             services.AddScoped<SecurityController, SecurityController>();

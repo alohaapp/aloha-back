@@ -11,18 +11,18 @@ namespace Aloha.Controllers
     [Route("[controller]")]
     public class SecurityController : Controller
     {
-        private readonly IUserService userService;
+        private readonly ISecurityService securityService;
 
-        public SecurityController(IUserService userService)
+        public SecurityController(ISecurityService securityService)
         {
-            this.userService = userService;
+            this.securityService = securityService;
         }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]CredentialsDto credentials)
         {
-            var token = userService.GenerateJwtToken(credentials.UserName, credentials.Password);
+            var token = securityService.GenerateJwtToken(credentials.UserName, credentials.Password);
 
             if (token == null)
             {

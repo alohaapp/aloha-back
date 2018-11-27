@@ -5,16 +5,22 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Aloha.Models.Contexts;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Aloha.Services
 {
-    public class UserService : IUserService
+    public class SecurityService : ISecurityService
     {
+        private readonly IConfiguration configuration;
+
         private readonly AlohaContext dbContext;
 
-        public UserService(AlohaContext dbContext)
+        public SecurityService(
+            IConfiguration configuration,
+            AlohaContext dbContext)
         {
+            this.configuration = configuration;
             this.dbContext = dbContext;
         }
 
@@ -28,7 +34,8 @@ namespace Aloha.Services
                 return null;
             }
 
-            var key = Encoding.ASCII.GetBytes("aloha-test_123456789");
+            var key = Encoding.ASCII.GetBytes(configuration["JwtKey"]);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
