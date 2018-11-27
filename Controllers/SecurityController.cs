@@ -22,7 +22,7 @@ namespace Aloha.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]CredentialsDto credentials)
         {
-            var token = userService.Authenticate(credentials.UserName, credentials.Password);
+            var token = userService.GenerateJwtToken(credentials.UserName, credentials.Password);
 
             if (token == null)
             {
