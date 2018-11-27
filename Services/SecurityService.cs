@@ -24,6 +24,19 @@ namespace Aloha.Services
             this.dbContext = dbContext;
         }
 
+        public static string SHA256HexHashString(string str)
+        {
+            string hashString;
+
+            using (var sha256 = SHA256Managed.Create())
+            {
+                var hash = sha256.ComputeHash(Encoding.Default.GetBytes(str));
+                hashString = string.Join(string.Empty, hash.Select(b => b.ToString("X2")));
+            }
+
+            return hashString;
+        }
+
         public string GenerateJwtToken(string username, string password)
         {
             string passwordHash = SHA256HexHashString(password);
@@ -57,19 +70,6 @@ namespace Aloha.Services
         public string HashPassword(string password)
         {
             return SHA256HexHashString(password);
-        }
-
-        private string SHA256HexHashString(string str)
-        {
-            string hashString;
-
-            using (var sha256 = SHA256Managed.Create())
-            {
-                var hash = sha256.ComputeHash(Encoding.Default.GetBytes(str));
-                hashString = string.Join(string.Empty, hash.Select(b => b.ToString("X2")));
-            }
-
-            return hashString;
         }
     }
 }

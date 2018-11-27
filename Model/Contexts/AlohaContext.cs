@@ -1,4 +1,5 @@
 using Aloha.Model.Entities;
+using Aloha.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Models.Contexts
@@ -34,7 +35,7 @@ namespace Aloha.Models.Contexts
                 {
                     Id = 1,
                     UserName = "admin",
-                    PasswordHash = "8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918" // admin
+                    PasswordHash = SecurityService.SHA256HexHashString("admin")
                 });
         }
     }
