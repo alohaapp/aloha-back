@@ -16,17 +16,20 @@ namespace Aloha.Controllers
         private readonly AlohaContext dbContext;
         private readonly IClassMapping<Office, OfficeDto> officeToOfficeDtoMapping;
         private readonly IClassMapping<OfficeDto, Office> officeDtoToOfficeMapping;
+        private readonly IClassMapping<Floor, FloorDto> floorToFloorDtoMapping;
         private readonly IEntityUpdater<Office> officeUpdater;
 
         public OfficesController(
             AlohaContext dbContext,
             IClassMapping<Office, OfficeDto> officeToOfficeDtoMapping,
             IClassMapping<OfficeDto, Office> officeDtoToOfficeMapping,
+            IClassMapping<Floor, FloorDto> floorToFloorDtoMapping,
             IEntityUpdater<Office> officeUpdater)
         {
             this.dbContext = dbContext;
             this.officeToOfficeDtoMapping = officeToOfficeDtoMapping;
             this.officeDtoToOfficeMapping = officeDtoToOfficeMapping;
+            this.floorToFloorDtoMapping = floorToFloorDtoMapping;
             this.officeUpdater = officeUpdater;
         }
 
@@ -34,8 +37,6 @@ namespace Aloha.Controllers
         public List<OfficeDto> List()
         {
             return dbContext.Offices
-                .Include(o => o.Floors)
-                    .ThenInclude(f => f.Workstations)
                 .Select(officeToOfficeDtoMapping.Map)
                 .ToList();
         }
@@ -44,13 +45,21 @@ namespace Aloha.Controllers
         public OfficeDto Get(int id)
         {
             Office office = dbContext.Offices
-                .Include(o => o.Floors)
-                    .ThenInclude(f => f.Workstations)
                 .Single(o => o.Id == id);
 
             return office == null
                 ? null
                 : officeToOfficeDtoMapping.Map(office);
+        }
+
+        [HttpGet("{id}/Floors")]
+        public List<FloorDto> ListFloors(int id)
+        {
+            return dbContext.Offices
+                .Include(o => o.Floors)
+                .Single(o => o.Id == id)?.Floors
+                .Select(floorToFloorDtoMapping.Map)
+                .ToList();
         }
 
         [HttpPost]
@@ -66,14 +75,13 @@ namespace Aloha.Controllers
             return officeToOfficeDtoMapping.Map(office);
         }
 
-        [HttpPut]
-        public OfficeDto Update([FromBody]OfficeDto officeDto)
+        [HttpPut("{id}")]
+        public OfficeDto Update(int id, [FromBody]OfficeDto officeDto)
         {
             Office office = officeDtoToOfficeMapping.Map(officeDto);
 
             Office actualOffice = dbContext.Offices
-                .Include(f => f.Floors)
-                .SingleOrDefault(f => f.Id == officeDto.Id);
+                .SingleOrDefault(f => f.Id == id);
 
             officeUpdater.Update(actualOffice, office);
 

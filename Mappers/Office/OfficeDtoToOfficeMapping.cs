@@ -11,8 +11,7 @@ namespace Aloha.Mappers
         {
             return new Office()
             {
-                Name = officeDto.Name,
-                Floors = new List<Floor>()
+                Name = officeDto.Name
             };
         }
     }

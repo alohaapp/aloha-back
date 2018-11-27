@@ -19,7 +19,7 @@ namespace Aloha.Dtos
 
         public string Notes { get; set; }
 
-        public int UserId { get; set; }
+        public string UserName { get; set; }
 
         public int? WorkstationId { get; set; }
     }

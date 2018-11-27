@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Aloha.Dtos;
 using Aloha.Model.Entities;
 
@@ -13,8 +14,7 @@ namespace Aloha.Mappers
                 Id = input.Id,
                 Name = input.Name,
                 ImageUrl = input.ImageURL,
-                OfficeId = input.Office.Id,
-                Workstations = input.Workstations
+                OfficeId = input.Office.Id
             };
         }
     }

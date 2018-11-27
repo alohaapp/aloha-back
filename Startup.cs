@@ -1,9 +1,12 @@
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using Aloha.Controllers;
 using Aloha.Dtos;
+using Aloha.Mappers;
 using Aloha.Model.Entities;
 using Aloha.Models.Contexts;
+using Aloha.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,11 +17,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using Aloha.Mappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Aloha.Services;
 
 namespace Aloha
 {
@@ -89,12 +89,13 @@ namespace Aloha
                 options.UseMySql(connectionString);
             });
 
+            // Services
             services.AddScoped<IUserService, UserService>();
 
             // Controllers
             services.AddScoped<SecurityController, SecurityController>();
-            services.AddScoped<UsersController, UsersController>();
             services.AddScoped<WorkersController, WorkersController>();
+            services.AddScoped<WorkstationsController, WorkstationsController>();
             services.AddScoped<FloorsController, FloorsController>();
             services.AddScoped<OfficesController, OfficesController>();
 
@@ -103,12 +104,16 @@ namespace Aloha
             services.AddScoped<IClassMapping<UserDto, User>, UserDtoToUserMapping>();
             services.AddScoped<IClassMapping<Worker, WorkerDto>, WorkerToWorkerDtoMapping>();
             services.AddScoped<IClassMapping<WorkerDto, Worker>, WorkerDtoToWorkerMapping>();
+            services.AddScoped<IClassMapping<Workstation, WorkstationDto>, WorkstationToWorkstationDtoMapping>();
+            services.AddScoped<IClassMapping<WorkstationDto, Workstation>, WorkstationDtoToWorkstationMapping>();
             services.AddScoped<IClassMapping<Floor, FloorDto>, FloorToFloorDtoMapping>();
             services.AddScoped<IClassMapping<FloorDto, Floor>, FloorDtoToFloorMapping>();
             services.AddScoped<IClassMapping<Office, OfficeDto>, OfficeToOfficeDtoMapping>();
             services.AddScoped<IClassMapping<OfficeDto, Office>, OfficeDtoToOfficeMapping>();
 
             // Updaters
+            services.AddScoped<IEntityUpdater<Worker>, WorkerUpdater>();
+            services.AddScoped<IEntityUpdater<Workstation>, WorkstationUpdater>();
             services.AddScoped<IEntityUpdater<Floor>, FloorUpdater>();
             services.AddScoped<IEntityUpdater<Office>, OfficeUpdater>();
         }
@@ -128,11 +133,10 @@ namespace Aloha
                 app.UseHsts();
             }
 
-            app.UseCors(builder => 
-                builder.AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-            );
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

@@ -10,7 +10,5 @@ namespace Aloha.Dtos
 
         [Required]
         public string Name { get; set; }
-
-        public ICollection<FloorDto> Floors { get; set; }
     }
 }
