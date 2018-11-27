@@ -7,11 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Aloha.Controllers
 {
-    public class Credentials {
-        public string UserName { get; set; }
-        public string Password { get; set; }
-    }
-
     [ApiController]
     [Route("[controller]")]
     public class SecurityController : Controller
@@ -25,12 +20,14 @@ namespace Aloha.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]Credentials credentials)
+        public IActionResult Authenticate([FromBody]CredentialsDto credentials)
         {
             var token = userService.Authenticate(credentials.UserName, credentials.Password);
 
             if (token == null)
+            {
                 return BadRequest(new { message = "Incorrect username or password" });
+            }
 
             return Ok(token);
         }

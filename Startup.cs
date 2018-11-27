@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Aloha.Controllers;
@@ -7,6 +8,7 @@ using Aloha.Mappers;
 using Aloha.Model.Entities;
 using Aloha.Models.Contexts;
 using Aloha.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,9 +18,8 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Aloha
 {
@@ -73,6 +74,23 @@ namespace Aloha
                 };
 
                 swagger.SwaggerDoc(SwaggerConfig.DocNameV1, info);
+
+                var apiKeyScheme = new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                };
+
+                swagger.AddSecurityDefinition("Bearer", apiKeyScheme);
+
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Bearer", new string[] { } },
+                };
+
+                swagger.AddSecurityRequirement(security);
             });
 
             services.AddDbContext<AlohaContext>(options =>

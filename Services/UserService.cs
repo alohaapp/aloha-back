@@ -9,13 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Aloha.Services
 {
-    public interface IUserService
-    {
-        string Authenticate(string username, string password);
-
-        string HashPassword(string password);
-    }
-
     public class UserService : IUserService
     {
         private readonly AlohaContext dbContext;
@@ -38,7 +31,7 @@ namespace Aloha.Services
             var key = Encoding.ASCII.GetBytes("aloha-test_123456789");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[] 
+                Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -66,18 +59,10 @@ namespace Aloha.Services
             using (var sha256 = SHA256Managed.Create())
             {
                 var hash = sha256.ComputeHash(Encoding.Default.GetBytes(str));
-                hashString = ToHex(hash, false);
+                hashString = string.Join(string.Empty, hash.Select(b => b.ToString("X2")));
             }
 
             return hashString;
-        }
-
-        private string ToHex(byte[] bytes, bool upperCase)
-        {
-            StringBuilder result = new StringBuilder(bytes.Length * 2);
-            for (int i = 0; i < bytes.Length; i++)
-                result.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
-            return result.ToString();
         }
     }
 }

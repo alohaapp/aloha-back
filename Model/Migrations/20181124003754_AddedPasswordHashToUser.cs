@@ -10,7 +10,7 @@ namespace Aloha.Migrations
                 name: "PasswordHash",
                 table: "Users",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
