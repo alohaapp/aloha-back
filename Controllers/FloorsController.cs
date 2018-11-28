@@ -54,16 +54,6 @@ namespace Aloha.Controllers
                 : floorToFloorDtoMapping.Map(floor);
         }
 
-        [HttpGet("{id}/Workstations")]
-        public List<WorkstationDto> ListWorkstations(int id)
-        {
-            return dbContext.Floors
-                .Include(f => f.Workstations)
-                .Single(f => f.Id == id)?.Workstations
-                .Select(workstationToWorkstationDtoMapping.Map)
-                .ToList();
-        }
-
         [HttpPost]
         public FloorDto Add([FromBody]FloorDto floorDto)
         {

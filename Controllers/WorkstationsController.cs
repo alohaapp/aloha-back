@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Aloha.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/Floors/{floorId}/[controller]")]
     public class WorkstationsController : Controller
     {
         private readonly AlohaContext dbContext;
@@ -31,21 +31,22 @@ namespace Aloha.Controllers
         }
 
         [HttpGet]
-        public List<WorkstationDto> List()
+        public List<WorkstationDto> List(int floorId)
         {
             return dbContext.Set<Workstation>()
                 .Include(w => w.Floor)
-                .AsEnumerable()
+                .Where(w => w.Floor.Id == floorId)
                 .Select(workstationToWorkstationDtoMapping.Map)
                 .ToList();
         }
 
         [HttpGet("{id}")]
-        public WorkstationDto Get(int id)
+        public WorkstationDto Get(int floorId, int id)
         {
             Workstation workstation = dbContext.Set<Workstation>()
                 .Include(w => w.Floor)
-                .Single(w => w.Id == id);
+                .Where(w => w.Floor.Id == floorId)
+                .SingleOrDefault(w => w.Id == id);
 
             return workstation == null
                 ? null
@@ -53,13 +54,13 @@ namespace Aloha.Controllers
         }
 
         [HttpPost]
-        public WorkstationDto Add([FromBody]WorkstationDto workstationDto)
+        public WorkstationDto Add(int floorId, [FromBody]WorkstationDto workstationDto)
         {
             Workstation workstation = workstationDtoToWorkstationMapping.Map(workstationDto);
 
             Floor floor = dbContext.Floors
                 .Include(o => o.Workstations)
-                .SingleOrDefault(o => o.Id == workstationDto.FloorId);
+                .SingleOrDefault(o => o.Id == floorId);
 
             floor.Workstations.Add(workstation);
 
@@ -69,13 +70,19 @@ namespace Aloha.Controllers
         }
 
         [HttpPut("{id}")]
-        public WorkstationDto Update(int id, [FromBody]WorkstationDto workstationDto)
+        public WorkstationDto Update(int floorId, int id, [FromBody]WorkstationDto workstationDto)
         {
             Workstation workstation = workstationDtoToWorkstationMapping.Map(workstationDto);
 
             Workstation actualWorkstation = dbContext.Workstations
                 .Include(w => w.Floor)
+                .Where(w => w.Floor.Id == floorId)
                 .SingleOrDefault(w => w.Id == id);
+            
+            if (actualWorkstation == null)
+            {
+                return null;
+            }
 
             workstationUpdater.Update(actualWorkstation, workstation);
 
@@ -85,10 +92,12 @@ namespace Aloha.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void Remove(int id)
+        public void Remove(int floorId, int id)
         {
-            Workstation workstation = dbContext.Set<Workstation>()
-                .Find(id);
+            Workstation workstation = dbContext.Workstations
+                .Include(w => w.Floor)
+                .Where(w => w.Floor.Id == floorId)
+                .SingleOrDefault(w => w.Id == id);
 
             dbContext.Set<Workstation>().Remove(workstation);
 
