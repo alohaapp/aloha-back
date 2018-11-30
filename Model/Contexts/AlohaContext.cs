@@ -1,4 +1,5 @@
 using Aloha.Model.Entities;
+using Aloha.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Model.Contexts
@@ -24,9 +25,20 @@ namespace Aloha.Model.Contexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<User>()
+                .HasAlternateKey(u => u.UserName);
             builder.Entity<Worker>()
                 .HasIndex(u => u.UserId)
                 .IsUnique();
+
+            // Seed
+            builder.Entity<User>()
+                .HasData(new User
+                {
+                    Id = -1,
+                    UserName = "admin",
+                    PasswordHash = SecurityService.SHA256HexHashString("admin")
+                });
         }
     }
 }

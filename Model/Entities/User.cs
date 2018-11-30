@@ -7,15 +7,15 @@ namespace Aloha.Model.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         [Required]
         public string UserName { get; set; }
 
-        /*[Required]
+        [Required]
         public string PasswordHash { get; set; }
 
-        [Required]
+        /*[Required]
         public string Salt { get; set; }
 
         public bool IsAdmin { get; set; }*/

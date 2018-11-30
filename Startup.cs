@@ -1,19 +1,26 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using Aloha.Controllers;
 using Aloha.Dtos;
 using Aloha.Mappers;
 using Aloha.Model.Contexts;
 using Aloha.Model.Entities;
+using Aloha.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Aloha
@@ -37,7 +44,34 @@ namespace Aloha
 
             services.AddCors();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(o =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                o.Filters.Add(new AuthorizeFilter(policy));
+            })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            var key = Encoding.ASCII.GetBytes(Configuration["JwtKey"]);
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
             services.AddSwaggerGen(swagger =>
             {
@@ -50,6 +84,23 @@ namespace Aloha
                 };
 
                 swagger.SwaggerDoc(SwaggerConfig.DocNameV1, info);
+
+                var apiKeyScheme = new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                };
+
+                swagger.AddSecurityDefinition("Bearer", apiKeyScheme);
+
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Bearer", new string[] { } },
+                };
+
+                swagger.AddSecurityRequirement(security);
             });
 
             services.AddDbContext<AlohaContext>(options =>
@@ -66,7 +117,11 @@ namespace Aloha
                 options.UseMySql(connectionString);
             });
 
+            // Services
+            services.AddScoped<ISecurityService, SecurityService>();
+
             // Controllers
+            services.AddScoped<SecurityController, SecurityController>();
             services.AddScoped<WorkersController, WorkersController>();
             services.AddScoped<WorkstationsController, WorkstationsController>();
             services.AddScoped<FloorsController, FloorsController>();
@@ -113,6 +168,8 @@ namespace Aloha
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc();
 

@@ -3,42 +3,28 @@ using System;
 using Aloha.Model.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aloha.Migrations
 {
     [DbContext(typeof(AlohaContext))]
-    partial class AlohaContextModelSnapshot : ModelSnapshot
+    [Migration("20181127201935_UniqueUserName")]
+    partial class UniqueUserName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Aloha.Model.Entities.File", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<byte[]>("Data")
-                        .IsRequired();
-
-                    b.Property<string>("MediaType")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Files");
-                });
-
             modelBuilder.Entity("Aloha.Model.Entities.Floor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("ImageId");
+                    b.Property<string>("ImageURL");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -46,8 +32,6 @@ namespace Aloha.Migrations
                     b.Property<int>("OfficeId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageId");
 
                     b.HasIndex("OfficeId");
 
@@ -101,15 +85,13 @@ namespace Aloha.Migrations
 
                     b.Property<string>("Notes");
 
-                    b.Property<int?>("PhotoId");
+                    b.Property<string>("PhotoUrl");
 
                     b.Property<string>("Surname");
 
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PhotoId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -142,10 +124,6 @@ namespace Aloha.Migrations
 
             modelBuilder.Entity("Aloha.Model.Entities.Floor", b =>
                 {
-                    b.HasOne("Aloha.Model.Entities.File", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
-
                     b.HasOne("Aloha.Model.Entities.Office", "Office")
                         .WithMany("Floors")
                         .HasForeignKey("OfficeId")
@@ -154,10 +132,6 @@ namespace Aloha.Migrations
 
             modelBuilder.Entity("Aloha.Model.Entities.Worker", b =>
                 {
-                    b.HasOne("Aloha.Model.Entities.File", "Photo")
-                        .WithMany()
-                        .HasForeignKey("PhotoId");
-
                     b.HasOne("Aloha.Model.Entities.User", "User")
                         .WithOne("Worker")
                         .HasForeignKey("Aloha.Model.Entities.Worker", "UserId")

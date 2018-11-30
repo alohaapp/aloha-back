@@ -6,11 +6,14 @@ using Aloha.Dtos;
 using Aloha.Mappers;
 using Aloha.Model.Contexts;
 using Aloha.Model.Entities;
+using Aloha.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class WorkersController : Controller
@@ -19,17 +22,20 @@ namespace Aloha.Controllers
         private readonly IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping;
         private readonly IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping;
         private readonly IEntityUpdater<Worker> workerUpdater;
+        private readonly ISecurityService securityService;
 
         public WorkersController(
             AlohaContext alohaContext,
             IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping,
             IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping,
-            IEntityUpdater<Worker> workerUpdater)
+            IEntityUpdater<Worker> workerUpdater,
+            ISecurityService securityService)
         {
             this.alohaContext = alohaContext;
             this.workerToWorkerDtoMapping = workerToWorkerDtoMapping;
             this.workerDtoToWorkerMapping = workerDtoToWorkerMapping;
             this.workerUpdater = workerUpdater;
+            this.securityService = securityService;
         }
 
         [HttpGet]
@@ -58,14 +64,25 @@ namespace Aloha.Controllers
         }
 
         [HttpPost]
-        public WorkerDto Add([FromBody]WorkerDto workerDto)
+        public ActionResult<WorkerDto> Add([FromBody]WorkerDto workerDto)
         {
+            if (workerDto.UserName == null)
+            {
+                return BadRequest(new { Password = "The UserName field is required." });
+            }
+
+            if (workerDto.Password == null)
+            {
+                return BadRequest(new { Password = "The Password field is required." });
+            }
+
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
 
             User user = new User()
             {
                 UserName = workerDto.UserName,
-                Worker = worker
+                Worker = worker,
+                PasswordHash = securityService.HashPassword(workerDto.Password)
             };
 
             alohaContext.Users.Add(user);

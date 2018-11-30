@@ -4,11 +4,13 @@ using Aloha.Dtos;
 using Aloha.Mappers;
 using Aloha.Model.Contexts;
 using Aloha.Model.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class FloorsController : Controller
