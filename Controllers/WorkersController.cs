@@ -6,11 +6,13 @@ using Aloha.Dtos;
 using Aloha.Mappers;
 using Aloha.Model.Entities;
 using Aloha.Models.Contexts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class WorkersController : Controller
