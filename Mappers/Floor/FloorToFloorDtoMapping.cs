@@ -13,7 +13,8 @@ namespace Aloha.Mappers
             {
                 Id = input.Id,
                 Name = input.Name,
-                ImageUrl = input.ImageURL,
+                ImageId = input.Image == null ? null : (int?)input.Image.Id,
+                WorkerCount = input.Workstations == null ? 0 : input.Workstations.Count(w => w.WorkerId != null),
                 OfficeId = input.Office.Id
             };
         }

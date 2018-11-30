@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Aloha.Dtos;
 using Aloha.Mappers;
+using Aloha.Model.Contexts;
 using Aloha.Model.Entities;
-using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +40,8 @@ namespace Aloha.Controllers
         {
             return dbContext.Set<Floor>()
                 .Include(f => f.Office)
+                .Include(f => f.Workstations)
+                .Include(f => f.Image)
                 .Select(floorToFloorDtoMapping.Map)
                 .ToList();
         }
@@ -49,21 +51,13 @@ namespace Aloha.Controllers
         {
             Floor floor = dbContext.Set<Floor>()
                 .Include(f => f.Office)
+                .Include(f => f.Workstations)
+                .Include(f => f.Image)
                 .Single(f => f.Id == id);
 
             return floor == null
                 ? null
                 : floorToFloorDtoMapping.Map(floor);
-        }
-
-        [HttpGet("{id}/Workstations")]
-        public List<WorkstationDto> ListWorkstations(int id)
-        {
-            return dbContext.Floors
-                .Include(f => f.Workstations)
-                .Single(f => f.Id == id)?.Workstations
-                .Select(workstationToWorkstationDtoMapping.Map)
-                .ToList();
         }
 
         [HttpPost]
@@ -89,6 +83,8 @@ namespace Aloha.Controllers
 
             Floor actualFloor = dbContext.Floors
                 .Include(f => f.Office)
+                .Include(f => f.Workstations)
+                .Include(f => f.Image)
                 .SingleOrDefault(f => f.Id == id);
 
             floorUpdater.Update(actualFloor, floor);
@@ -101,12 +97,12 @@ namespace Aloha.Controllers
         [HttpDelete("{id}")]
         public void Remove(int id)
         {
-            // TODO: Remove its Workastations, either here or adding a on-delete-cascade.
+            Floor floor = dbContext.Floors
+                .Include(f => f.Image)
+                .Single(f => f.Id == id);
 
-            Floor floor = dbContext.Set<Floor>()
-                .Find(id);
-
-            dbContext.Set<Floor>().Remove(floor);
+            dbContext.Floors.Remove(floor);
+            dbContext.Files.Remove(floor.Image);
 
             dbContext.SaveChanges();
         }

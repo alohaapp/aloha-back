@@ -10,8 +10,11 @@ namespace Aloha.Dtos
         [Required]
         public string Name { get; set; }
 
-        [Url]
         public string ImageUrl { get; set; }
+
+        public int WorkerCount { get; set; }
+
+        public int? ImageId { get; set; }
 
         public int OfficeId { get; set; }
     }

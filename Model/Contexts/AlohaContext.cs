@@ -2,7 +2,7 @@ using Aloha.Model.Entities;
 using Aloha.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace Aloha.Models.Contexts
+namespace Aloha.Model.Contexts
 {
     public class AlohaContext : DbContext
     {
@@ -20,6 +20,8 @@ namespace Aloha.Models.Contexts
         public DbSet<Floor> Floors { get; set; }
 
         public DbSet<Office> Offices { get; set; }
+
+        public DbSet<File> Files { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -13,9 +13,9 @@ namespace Aloha.Mappers
                 Id = worker.Id,
                 Name = worker.Name,
                 Surname = worker.Surname,
-                PhotoUrl = worker.PhotoUrl,
                 Email = worker.Email,
                 Notes = worker.Notes,
+                PhotoId = worker.Photo == null ? null : (int?)worker.Photo.Id,
                 WorkstationId = worker.Workstation == null ? null : (int?)worker.Workstation.Id,
 
                 UserName = worker.User.UserName

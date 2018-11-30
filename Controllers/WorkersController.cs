@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aloha.Dtos;
 using Aloha.Mappers;
+using Aloha.Model.Contexts;
 using Aloha.Model.Entities;
-using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +40,7 @@ namespace Aloha.Controllers
             return alohaContext.Workers
                 .Include(w => w.User)
                 .Include(w => w.Workstation)
+                .Include(f => f.Photo)
                 .Select(workerToWorkerDtoMapping.Map)
                 .ToList();
         }
@@ -50,6 +51,7 @@ namespace Aloha.Controllers
             Worker worker = alohaContext.Workers
                 .Include(w => w.User)
                 .Include(w => w.Workstation)
+                .Include(f => f.Photo)
                 .Single(w => w.Id == id);
 
             return worker == null
@@ -82,6 +84,7 @@ namespace Aloha.Controllers
             Worker actualWorker = alohaContext.Workers
                 .Include(f => f.User)
                 .Include(w => w.Workstation)
+                .Include(f => f.Photo)
                 .SingleOrDefault(f => f.Id == id);
 
             workerUpdater.Update(actualWorker, worker);
@@ -96,10 +99,12 @@ namespace Aloha.Controllers
         {
             Worker worker = alohaContext.Workers
                 .Include(w => w.User)
+                .Include(f => f.Photo)
                 .Single(w => w.Id == id);
 
             alohaContext.Workers.Remove(worker);
             alohaContext.Users.Remove(worker.User);
+            alohaContext.Files.Remove(worker.Photo);
 
             alohaContext.SaveChanges();
         }

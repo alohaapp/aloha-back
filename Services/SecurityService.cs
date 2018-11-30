@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Aloha.Models.Contexts;
+using Aloha.Model.Contexts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 

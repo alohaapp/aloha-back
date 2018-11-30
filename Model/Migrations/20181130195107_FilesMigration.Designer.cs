@@ -3,14 +3,16 @@ using System;
 using Aloha.Model.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aloha.Migrations
 {
     [DbContext(typeof(AlohaContext))]
-    partial class AlohaContextModelSnapshot : ModelSnapshot
+    [Migration("20181130195107_FilesMigration")]
+    partial class FilesMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,21 +74,12 @@ namespace Aloha.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired();
-
                     b.Property<string>("UserName")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("UserName");
-
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new { Id = 1, PasswordHash = "8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918", UserName = "admin" }
-                    );
                 });
 
             modelBuilder.Entity("Aloha.Model.Entities.Worker", b =>
