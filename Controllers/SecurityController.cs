@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Aloha.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     public class SecurityController : Controller
     {
         private readonly ISecurityService securityService;
@@ -20,7 +20,7 @@ namespace Aloha.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]CredentialsDto credentials)
+        public ActionResult<string> Authenticate([FromBody]CredentialsDto credentials)
         {
             var token = securityService.GenerateJwtToken(credentials.UserName, credentials.Password);
 
@@ -29,7 +29,7 @@ namespace Aloha.Controllers
                 return BadRequest(new { message = "Incorrect username or password" });
             }
 
-            return Ok(token);
+            return token;
         }
 
         [HttpGet("check")]

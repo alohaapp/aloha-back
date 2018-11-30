@@ -35,7 +35,7 @@ namespace Aloha.Model.Contexts
             builder.Entity<User>()
                 .HasData(new User
                 {
-                    Id = 1,
+                    Id = -1,
                     UserName = "admin",
                     PasswordHash = SecurityService.SHA256HexHashString("admin")
                 });
