@@ -29,7 +29,7 @@ namespace Aloha.Controllers
 
             if (file != null)
             {
-                return File(file.Data, file.ContentType);
+                return File(file.Data, file.MediaType);
             }
 
             return null;
