@@ -20,6 +20,8 @@ namespace Aloha.Model.Contexts
 
         public DbSet<Office> Offices { get; set; }
 
+        public DbSet<File> Files { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Worker>()
