@@ -1,7 +1,7 @@
 using Aloha.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Aloha.Models.Contexts
+namespace Aloha.Model.Contexts
 {
     public class AlohaContext : DbContext
     {
