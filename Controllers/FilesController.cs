@@ -15,8 +15,7 @@ namespace Aloha.Controllers
     {
         private readonly AlohaContext dbContext;
 
-        public FilesController(
-            AlohaContext dbContext)
+        public FilesController(AlohaContext dbContext)
         {
             this.dbContext = dbContext;
         }
