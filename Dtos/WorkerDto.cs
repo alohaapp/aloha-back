@@ -11,7 +11,6 @@ namespace Aloha.Dtos
 
         public string Surname { get; set; }
 
-        [Url]
         public string PhotoUrl { get; set; }
 
         [EmailAddress]

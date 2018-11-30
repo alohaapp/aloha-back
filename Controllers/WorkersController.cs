@@ -119,7 +119,11 @@ namespace Aloha.Controllers
 
             alohaContext.Workers.Remove(worker);
             alohaContext.Users.Remove(worker.User);
-            alohaContext.Files.Remove(worker.Photo);
+
+            if (worker.Photo != null)
+            {
+                alohaContext.Files.Remove(worker.Photo);
+            }
 
             alohaContext.SaveChanges();
         }
