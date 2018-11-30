@@ -14,13 +14,12 @@ namespace Aloha.Model.Entities
 
         public string Surname { get; set; }
 
-        [Url]
-        public string PhotoUrl { get; set; }
-
         [EmailAddress]
         public string Email { get; set; }
 
         public string Notes { get; set; }
+
+        public File Photo { get; set; }
 
         [ForeignKey(nameof(User))]
         public int UserId { get; set; }

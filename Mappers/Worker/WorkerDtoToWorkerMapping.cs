@@ -11,7 +11,6 @@ namespace Aloha.Mappers
             {
                 Name = workerDto.Name,
                 Surname = workerDto.Surname,
-                PhotoUrl = workerDto.PhotoUrl,
                 Email = workerDto.Email,
                 Notes = workerDto.Notes,
             };

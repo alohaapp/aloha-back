@@ -8,7 +8,6 @@ namespace Aloha.Mappers
         {
             target.Name = source.Name;
             target.Surname = source.Surname;
-            target.PhotoUrl = source.PhotoUrl;
             target.Email = source.Email;
             target.Notes = source.Notes;
         }
