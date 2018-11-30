@@ -13,6 +13,8 @@ namespace Aloha.Dtos
         [Url]
         public string ImageUrl { get; set; }
 
+        public int WorkerCount { get; set; }
+
         public int OfficeId { get; set; }
     }
 }
