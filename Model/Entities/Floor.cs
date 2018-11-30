@@ -13,8 +13,7 @@ namespace Aloha.Model.Entities
         [Required]
         public string Name { get; set; }
 
-        [Url]
-        public string ImageURL { get; set; }
+        public File Image { get; set; }
 
         [Required]
         public virtual Office Office { get; set; }

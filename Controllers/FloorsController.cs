@@ -39,6 +39,7 @@ namespace Aloha.Controllers
             return dbContext.Set<Floor>()
                 .Include(f => f.Office)
                 .Include(f => f.Workstations)
+                .Include(f => f.Image)
                 .Select(floorToFloorDtoMapping.Map)
                 .ToList();
         }
@@ -49,6 +50,7 @@ namespace Aloha.Controllers
             Floor floor = dbContext.Set<Floor>()
                 .Include(f => f.Office)
                 .Include(f => f.Workstations)
+                .Include(f => f.Image)
                 .Single(f => f.Id == id);
 
             return floor == null
@@ -80,6 +82,7 @@ namespace Aloha.Controllers
             Floor actualFloor = dbContext.Floors
                 .Include(f => f.Office)
                 .Include(f => f.Workstations)
+                .Include(f => f.Image)
                 .SingleOrDefault(f => f.Id == id);
 
             floorUpdater.Update(actualFloor, floor);
@@ -92,10 +95,12 @@ namespace Aloha.Controllers
         [HttpDelete("{id}")]
         public void Remove(int id)
         {
-            Floor floor = dbContext.Set<Floor>()
-                .Find(id);
+            Floor floor = dbContext.Floors
+                .Include(f => f.Image)
+                .Single(f => f.Id == id);
 
-            dbContext.Set<Floor>().Remove(floor);
+            dbContext.Floors.Remove(floor);
+            dbContext.Files.Remove(floor.Image);
 
             dbContext.SaveChanges();
         }
