@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aloha.Dtos;
 using Aloha.Mappers;
-using Aloha.Model.Entities;
 using Aloha.Model.Contexts;
+using Aloha.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
