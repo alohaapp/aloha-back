@@ -5,7 +5,7 @@ namespace Aloha.Dtos
     public class WorkstationDto
     {
         public int Id { get; set; }
-        
+
         public decimal X { get; set; }
 
         public decimal Y { get; set; }
@@ -13,5 +13,7 @@ namespace Aloha.Dtos
         public int FloorId { get; set; }
 
         public int? WorkerId { get; set; }
+
+        public int? PhotoId { get; set; }
     }
 }
