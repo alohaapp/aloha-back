@@ -68,12 +68,12 @@ namespace Aloha.Controllers
         {
             if (workerDto.UserName == null)
             {
-                return BadRequest(new { Password = "The UserName field is required."});
+                return BadRequest(new { Password = "The UserName field is required." });
             }
 
             if (workerDto.Password == null)
             {
-                return BadRequest(new { Password = "The Password field is required."});
+                return BadRequest(new { Password = "The Password field is required." });
             }
 
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
