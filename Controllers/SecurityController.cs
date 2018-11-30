@@ -32,7 +32,7 @@ namespace Aloha.Controllers
             return Ok(token);
         }
 
-        [HttpPost("check")]
+        [HttpGet("check")]
         public void Check()
         {
         }
