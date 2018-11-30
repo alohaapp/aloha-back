@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Aloha.Dtos;
 using Aloha.Mappers;
+using Aloha.Model.Contexts;
 using Aloha.Model.Entities;
-using Aloha.Models.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -78,7 +78,7 @@ namespace Aloha.Controllers
                 .Include(w => w.Floor)
                 .Where(w => w.Floor.Id == floorId)
                 .SingleOrDefault(w => w.Id == id);
-            
+
             if (actualWorkstation == null)
             {
                 return null;
