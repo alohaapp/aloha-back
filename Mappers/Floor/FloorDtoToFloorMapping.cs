@@ -1,5 +1,6 @@
 ﻿using System;
 using Aloha.Dtos;
+using Aloha.Helpers.FileHelper;
 using Aloha.Model.Entities;
 
 namespace Aloha.Mappers
@@ -10,7 +11,8 @@ namespace Aloha.Mappers
         {
             return new Floor()
             {
-                Name = input.Name
+                Name = input.Name,
+                Image = input.ImageUrl == null ? null : FileHelper.GetFileFromBase64(input.ImageUrl)
             };
         }
     }
