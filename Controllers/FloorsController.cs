@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Aloha.Dtos;
+using Aloha.Helpers.FileHelper;
 using Aloha.Mappers;
 using Aloha.Model.Contexts;
 using Aloha.Model.Entities;
@@ -84,6 +85,16 @@ namespace Aloha.Controllers
                 .Include(f => f.Workstations)
                 .Include(f => f.Image)
                 .SingleOrDefault(f => f.Id == id);
+
+            if (floorDto.ImageUrl != null && floorDto.ImageUrl != "")
+            {
+                if (actualFloor.Image != null)
+                {
+                    dbContext.Remove(actualFloor.Image);
+                }
+
+                actualFloor.Image = FileHelper.GetFileFromBase64(floorDto.ImageUrl);
+            }
 
             floorUpdater.Update(actualFloor, floor);
 

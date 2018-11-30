@@ -12,7 +12,7 @@ namespace Aloha.Helpers.FileHelper
             {
                 string[] typeAndDataSplit = data.Split(";");
 
-                var contentType = new ContentType(typeAndDataSplit[0].Replace("data:", string.Empty));
+                var contentType = new ContentType(typeAndDataSplit[0].Trim().Replace("data:", string.Empty));
                 if (contentType == null)
                 {
                     return null;

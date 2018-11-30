@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aloha.Dtos;
+using Aloha.Helpers.FileHelper;
 using Aloha.Mappers;
 using Aloha.Model.Contexts;
 using Aloha.Model.Entities;
@@ -84,6 +85,16 @@ namespace Aloha.Controllers
                 .Include(w => w.Workstation)
                 .Include(f => f.Photo)
                 .SingleOrDefault(f => f.Id == id);
+
+            if (workerDto.PhotoUrl != null && workerDto.PhotoUrl != "")
+            {
+                if (actualWorker.Photo != null)
+                {
+                    alohaContext.Remove(actualWorker.Photo);
+                }
+
+                actualWorker.Photo = FileHelper.GetFileFromBase64(workerDto.PhotoUrl);
+            }
 
             workerUpdater.Update(actualWorker, worker);
 
