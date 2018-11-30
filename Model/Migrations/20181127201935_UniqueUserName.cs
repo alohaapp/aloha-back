@@ -20,7 +20,7 @@ namespace Aloha.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "PasswordHash", "UserName" },
-                values: new object[] { 1, "8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918", "admin" });
+                values: new object[] { -1, "8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918", "admin" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -32,7 +32,7 @@ namespace Aloha.Migrations
             migrationBuilder.DeleteData(
                 table: "Users",
                 keyColumn: "Id",
-                keyValue: 1);
+                keyValue: -1);
 
             migrationBuilder.AlterColumn<string>(
                 name: "UserName",
