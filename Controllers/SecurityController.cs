@@ -31,7 +31,7 @@ namespace Aloha.Controllers
 
             if (token == null)
             {
-                return BadRequest(new { message = "Incorrect username or password" });
+                return Unauthorized();
             }
 
             var user = alohaDbContext.Users
