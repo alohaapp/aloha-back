@@ -43,6 +43,7 @@ namespace Aloha.Controllers
             {
                 UserName = user.UserName,
                 Token = token,
+                WorkerId = user.Worker?.Id,
                 Name = user.Worker?.Name,
                 SurName = user.Worker?.Surname,
                 ImageId = user.Worker?.Photo?.Id
@@ -51,9 +52,25 @@ namespace Aloha.Controllers
             return new ActionResult<UserProfileWithToken>(response);
         }
 
-        [HttpGet("check")]
-        public void Check()
+        [HttpGet("info")]
+        public UserProfileWithToken Info()
         {
+            var userId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            var user = alohaDbContext.Users
+                .Include(u => u.Worker)
+                    .ThenInclude(w => w.Photo)
+                .Single(u => u.Id == userId);
+
+            var response = new UserProfileWithToken()
+            {
+                UserName = user.UserName,
+                WorkerId = user.Worker?.Id,
+                Name = user.Worker?.Name,
+                SurName = user.Worker?.Surname,
+                ImageId = user.Worker?.Photo?.Id
+            };
+
+            return response;
         }
     }
 }
