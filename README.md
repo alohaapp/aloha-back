@@ -1,5 +1,5 @@
 # Aloha! 👋
-### Wellcome to your new office.
+### Welcome to your new office.
 
 Make easier your **onboarding** processes and lend a hand to new people **to locate and meet colleagues**, using a **simple gamification** strategy:
 
