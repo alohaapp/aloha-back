@@ -12,6 +12,7 @@ services:
             MYSQLCONNSTR_localdb: "Server=aloha-mysql;Port=3306;Database=aloha;Uid=aloha;Pwd=aloha;"
     aloha-mysql:
         image: mysql:5.5
+        command: --max_allowed_packet=268435456
         ports: # Development Only!
             - "3306:3306"
         environment:
