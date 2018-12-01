@@ -6,6 +6,8 @@ namespace Aloha.Dtos
 
         public string Token { get; set; }
 
+        public int? WorkerId { get; set; }
+
         public string Name { get; set; }
 
         public string SurName { get; set; }
