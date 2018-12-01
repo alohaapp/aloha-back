@@ -1,7 +1,7 @@
 # Aloha!
 ### Wellcome to your new office.
 
-Make easier your **onboarding processes** and help new people in the office to **locate and meet new colleagues**, using a **search engine** with customizable options and a simple **gamification strategy**.
+Make easier your **onboarding processes** and help new people to **locate and meet new colleagues**, using a **search engine** with customizable options and a simple **gamification strategy**.
 
 ## How does it work?
 
