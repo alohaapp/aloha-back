@@ -19,3 +19,5 @@ As users, **office workers** are able to:
 - **Search people** using different criteria.
 - **Visualize results** on the map or a list.
 - **Play games** related with colleagues.
+
+## Install Aloha!
