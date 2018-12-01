@@ -30,6 +30,8 @@ Although *Aloha!* emerged from a **specific need** in [Corunet](https://coru.net
 
 - We haven't found **any open source software** with these features. Even paying. If you find one, please, **share it with us!**
 - It's **applicable to different** labor or organizational **contexts**, where **teams** participate.
-- There are **many options to extend** functionalities.
+- There are **many options to extend** functionalities:
+ - **New games** and gamifications for onboarding processes or even to adapt [MIT Icebreakers and Team builders for diversity](https://studentlife.mit.edu/sites/default/files/Diversity-based%20Teambuilders%20and%20Icebreakers%20from%20Stonehill%20College.pdf).
+ - **Stock management**, inventory and distribution of devices in the office.
 
 ## Launch it!
