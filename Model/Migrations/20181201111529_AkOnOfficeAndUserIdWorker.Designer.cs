@@ -3,14 +3,16 @@ using System;
 using Aloha.Model.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aloha.Migrations
 {
     [DbContext(typeof(AlohaContext))]
-    partial class AlohaContextModelSnapshot : ModelSnapshot
+    [Migration("20181201111529_AkOnOfficeAndUserIdWorker")]
+    partial class AkOnOfficeAndUserIdWorker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
