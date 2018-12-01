@@ -1,5 +1,5 @@
 # Aloha! 👋
-### Wellcome to your new office.
+### Welcome to your new office.
 
 Make easier your **onboarding** processes and lend a hand to new people **to locate and meet colleagues**, using a **simple gamification** strategy:
 
@@ -38,7 +38,7 @@ Although *Aloha!* emerged from a **specific need** in [Corunet](https://coru.net
 
 This project is a fully containerized (using docker-compose) web API that serves as backend for [ALOHA-front](https://gitlab.com/corunahacks/2018/aloha/aloha-front).
 
-1. Make you sure you have [docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/install/) installed and working.
+1. Make sure you have [docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/install/) installed and working.
 
 2. `docker-compose up`
 
