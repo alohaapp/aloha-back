@@ -25,5 +25,7 @@ namespace Aloha.Dtos
         public int? PhotoId { get; set; }
 
         public int? WorkstationId { get; set; }
+
+        public int? FloorId { get; set; }
     }
 }

@@ -35,19 +35,17 @@ namespace Aloha.Controllers
             }
 
             var user = alohaDbContext.Users
+                .Include(u => u.Worker)
+                    .ThenInclude(w => w.Photo)
                 .Single(u => u.UserName == credentials.UserName);
-
-            var worker = alohaDbContext.Workers
-                .Include(w => w.Photo)
-                .Single(w => w.UserId == user.Id);
 
             var response = new UserProfileWithToken()
             {
                 UserName = user.UserName,
                 Token = token,
-                Name = worker.Name,
-                SurName = worker.Surname,
-                ImageId = worker.Photo?.Id
+                Name = user.Worker?.Name,
+                SurName = user.Worker?.Surname,
+                ImageId = user.Worker?.Photo?.Id
             };
 
             return new ActionResult<UserProfileWithToken>(response);

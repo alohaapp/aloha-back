@@ -45,6 +45,7 @@ namespace Aloha.Controllers
             return alohaContext.Workers
                 .Include(w => w.User)
                 .Include(w => w.Workstation)
+                    .ThenInclude(w => w.Floor)
                 .Include(f => f.Photo)
                 .Select(workerToWorkerDtoMapping.Map)
                 .ToList();
@@ -56,6 +57,7 @@ namespace Aloha.Controllers
             Worker worker = alohaContext.Workers
                 .Include(w => w.User)
                 .Include(w => w.Workstation)
+                    .ThenInclude(w => w.Floor)
                 .Include(f => f.Photo)
                 .Single(w => w.Id == id);
 
@@ -100,6 +102,7 @@ namespace Aloha.Controllers
             Worker actualWorker = alohaContext.Workers
                 .Include(f => f.User)
                 .Include(w => w.Workstation)
+                    .ThenInclude(w => w.Floor)
                 .Include(f => f.Photo)
                 .SingleOrDefault(f => f.Id == id);
 

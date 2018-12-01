@@ -18,6 +18,7 @@ namespace Aloha.Mappers
                 PhotoId = worker.Photo == null ? null : (int?)worker.Photo.Id,
                 WorkstationId = worker.Workstation == null ? null : (int?)worker.Workstation.Id,
 
+                FloorId = worker.Workstation == null ? null : (int?)worker.Workstation.Floor.Id,
                 UserName = worker.User.UserName
             };
         }
