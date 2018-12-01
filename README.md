@@ -1,7 +1,7 @@
 # Aloha! 👋
 ### Wellcome to your new office.
 
-Make easier your **onboarding** processes and lend a hand to new people **to locate and meet colleagues**, using a simple **gamification** strategy:
+Make easier your **onboarding** processes and lend a hand to new people **to locate and meet colleagues**, using a **simple gamification** strategy:
 
 - **creating a map** of your office and **locating team members** on it,
 - **exploring the map** and using a **customizable search engine** about people knowledge and projects,
