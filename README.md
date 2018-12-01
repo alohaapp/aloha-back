@@ -42,6 +42,6 @@ This project is a fully containerized (using docker-compose) web API that serves
 
 2. `docker-compose up`
 
-3. 👨🏻‍🔧 🐳
+3. 🐳
 
 4. Aloha! 👋
