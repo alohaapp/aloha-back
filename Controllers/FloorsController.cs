@@ -113,7 +113,11 @@ namespace Aloha.Controllers
                 .Single(f => f.Id == id);
 
             dbContext.Floors.Remove(floor);
-            dbContext.Files.Remove(floor.Image);
+
+            if (floor.Image != null)
+            {
+                dbContext.Files.Remove(floor.Image);
+            }
 
             dbContext.SaveChanges();
         }
