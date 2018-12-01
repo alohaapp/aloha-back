@@ -30,7 +30,8 @@ namespace Aloha.Model.Contexts
             builder.Entity<Worker>()
                 .HasAlternateKey(u => u.UserId);
             builder.Entity<Office>()
-                .HasAlternateKey(u => u.Name);
+                .HasIndex(u => u.Name)
+                .IsUnique();
 
             // Seed
             builder.Entity<User>()
