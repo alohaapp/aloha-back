@@ -103,7 +103,7 @@ namespace Aloha.Controllers
                 .Include(f => f.Photo)
                 .SingleOrDefault(f => f.Id == id);
 
-            if (workerDto.PhotoUrl != null && workerDto.PhotoUrl != "")
+            if (workerDto.PhotoUrl != null && workerDto.PhotoUrl != string.Empty)
             {
                 if (actualWorker.Photo != null)
                 {

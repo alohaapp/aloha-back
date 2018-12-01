@@ -88,7 +88,7 @@ namespace Aloha.Controllers
                 .Include(f => f.Image)
                 .SingleOrDefault(f => f.Id == id);
 
-            if (floorDto.ImageUrl != null && floorDto.ImageUrl != "")
+            if (floorDto.ImageUrl != null && floorDto.ImageUrl != string.Empty)
             {
                 if (actualFloor.Image != null)
                 {

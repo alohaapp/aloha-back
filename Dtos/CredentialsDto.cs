@@ -1,4 +1,4 @@
-namespace Aloha.Controllers
+namespace Aloha.Dtos
 {
     public class CredentialsDto
     {
