@@ -90,7 +90,14 @@ namespace Aloha.Controllers
             dbContext.Offices
                 .Add(office);
 
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
 
             return CreatedAtAction(nameof(GetById), new { Id = office.Id }, officeToOfficeDtoMapping.Map(office));
         }
@@ -114,7 +121,14 @@ namespace Aloha.Controllers
 
             officeUpdater.Update(actualOffice, office);
 
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
 
             return officeToOfficeDtoMapping.Map(actualOffice);
         }

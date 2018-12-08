@@ -19,20 +19,20 @@ namespace Aloha.Controllers
     [Route("api/v1/workers")]
     public class WorkersController : Controller
     {
-        private readonly AlohaContext alohaContext;
+        private readonly AlohaContext dbContext;
         private readonly IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping;
         private readonly IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping;
         private readonly IEntityUpdater<Worker> workerUpdater;
         private readonly ISecurityService securityService;
 
         public WorkersController(
-            AlohaContext alohaContext,
+            AlohaContext dbContext,
             IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping,
             IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping,
             IEntityUpdater<Worker> workerUpdater,
             ISecurityService securityService)
         {
-            this.alohaContext = alohaContext;
+            this.dbContext = dbContext;
             this.workerToWorkerDtoMapping = workerToWorkerDtoMapping;
             this.workerDtoToWorkerMapping = workerDtoToWorkerMapping;
             this.workerUpdater = workerUpdater;
@@ -43,7 +43,7 @@ namespace Aloha.Controllers
         [ProducesResponseType(200)]
         public List<WorkerDto> List()
         {
-            return alohaContext.Workers
+            return dbContext.Workers
                 .Include(w => w.User)
                 .Include(w => w.Workstation)
                     .ThenInclude(w => w.Floor)
@@ -57,7 +57,7 @@ namespace Aloha.Controllers
         [ProducesResponseType(404)]
         public ActionResult<WorkerDto> GetById(int id)
         {
-            Worker worker = alohaContext.Workers
+            Worker worker = dbContext.Workers
                 .Include(w => w.User)
                 .Include(w => w.Workstation)
                     .ThenInclude(w => w.Floor)
@@ -97,8 +97,16 @@ namespace Aloha.Controllers
                 PasswordHash = securityService.HashPassword(workerDto.Password)
             };
 
-            alohaContext.Users.Add(user);
-            alohaContext.SaveChanges();
+            dbContext.Users.Add(user);
+
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
 
             return CreatedAtAction(nameof(GetById), new { Id = worker.Id }, workerToWorkerDtoMapping.Map(worker));
         }
@@ -112,7 +120,7 @@ namespace Aloha.Controllers
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
 
-            Worker actualWorker = alohaContext.Workers
+            Worker actualWorker = dbContext.Workers
                 .Include(f => f.User)
                 .Include(w => w.Workstation)
                     .ThenInclude(w => w.Floor)
@@ -128,7 +136,7 @@ namespace Aloha.Controllers
             {
                 if (actualWorker.Photo != null)
                 {
-                    alohaContext.Remove(actualWorker.Photo);
+                    dbContext.Remove(actualWorker.Photo);
                 }
 
                 actualWorker.Photo = FileHelper.GetFileFromBase64(workerDto.PhotoUrl);
@@ -136,7 +144,14 @@ namespace Aloha.Controllers
 
             workerUpdater.Update(actualWorker, worker);
 
-            alohaContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
 
             return workerToWorkerDtoMapping.Map(actualWorker);
         }
@@ -146,7 +161,7 @@ namespace Aloha.Controllers
         [ProducesResponseType(404)]
         public ActionResult Remove(int id)
         {
-            Worker worker = alohaContext.Workers
+            Worker worker = dbContext.Workers
                 .Include(w => w.User)
                 .Include(f => f.Photo)
                 .SingleOrDefault(w => w.Id == id);
@@ -156,15 +171,15 @@ namespace Aloha.Controllers
                 return NotFound();
             }
 
-            alohaContext.Workers.Remove(worker);
-            alohaContext.Users.Remove(worker.User);
+            dbContext.Workers.Remove(worker);
+            dbContext.Users.Remove(worker.User);
 
             if (worker.Photo != null)
             {
-                alohaContext.Files.Remove(worker.Photo);
+                dbContext.Files.Remove(worker.Photo);
             }
 
-            alohaContext.SaveChanges();
+            dbContext.SaveChanges();
 
             return NoContent();
         }

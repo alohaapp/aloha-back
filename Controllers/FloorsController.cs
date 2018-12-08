@@ -81,7 +81,14 @@ namespace Aloha.Controllers
 
             office.Floors.Add(floor);
 
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
 
             return CreatedAtAction(nameof(GetById), new { Id = floor.Id }, floorToFloorDtoMapping.Map(floor));
         }
@@ -118,7 +125,14 @@ namespace Aloha.Controllers
 
             floorUpdater.Update(actualFloor, floor);
 
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
 
             return floorToFloorDtoMapping.Map(actualFloor);
         }

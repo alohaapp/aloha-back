@@ -12,7 +12,6 @@ namespace Aloha.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/v1/Floors/{floorId}/workstations")]
     public class WorkstationsController : Controller
     {
@@ -76,7 +75,14 @@ namespace Aloha.Controllers
 
             floor.Workstations.Add(workstation);
 
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
 
             return CreatedAtAction(nameof(GetById), new { floorId = floor.Id, Id = workstation.Id }, workstationToWorkstationDtoMapping.Map(workstation));
         }
@@ -102,7 +108,14 @@ namespace Aloha.Controllers
 
             workstationUpdater.Update(actualWorkstation, workstation);
 
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
 
             return workstationToWorkstationDtoMapping.Map(actualWorkstation);
         }

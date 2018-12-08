@@ -17,18 +17,18 @@ namespace Aloha.Controllers
     [Route("api/v1/users")]
     public class UsersController : Controller
     {
-        private readonly AlohaContext alohaContext;
+        private readonly AlohaContext dbContext;
         private readonly ISecurityService securityService;
         private readonly IClassMapping<User, UserDto> userToUserDtoMapping;
         private readonly IClassMapping<UserDto, User> userDtoToUserMapping;
 
         public UsersController(
-            AlohaContext alohaContext,
+            AlohaContext dbContext,
             ISecurityService securityService,
             IClassMapping<User, UserDto> userToUserDtoMapping,
             IClassMapping<UserDto, User> userDtoToUserMapping)
         {
-            this.alohaContext = alohaContext;
+            this.dbContext = dbContext;
             this.securityService = securityService;
             this.userToUserDtoMapping = userToUserDtoMapping;
             this.userDtoToUserMapping = userDtoToUserMapping;
@@ -38,7 +38,7 @@ namespace Aloha.Controllers
         [ProducesResponseType(200)]
         public List<UserDto> List()
         {
-            return alohaContext.Users
+            return dbContext.Users
                 .Select(userToUserDtoMapping.Map)
                 .ToList();
         }
@@ -48,7 +48,7 @@ namespace Aloha.Controllers
         [ProducesResponseType(404)]
         public ActionResult<UserDto> GetById(int id)
         {
-            User user = alohaContext.Users
+            User user = dbContext.Users
                 .SingleOrDefault(u => u.Id == id);
 
             if (user == null)
