@@ -70,6 +70,7 @@ namespace Aloha.Controllers
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         public ActionResult<FloorDto> Add([FromBody]FloorDto floorDto)
         {
