@@ -79,6 +79,11 @@ namespace Aloha.Controllers
                 .Include(o => o.Floors)
                 .SingleOrDefault(o => o.Id == floorDto.OfficeId);
 
+            if (office == null)
+            {
+                return NotFound();
+            }
+
             office.Floors.Add(floor);
 
             try

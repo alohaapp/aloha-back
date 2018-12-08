@@ -73,6 +73,11 @@ namespace Aloha.Controllers
                 .Include(o => o.Workstations)
                 .SingleOrDefault(o => o.Id == floorId);
 
+            if (floor == null)
+            {
+                return NotFound();
+            }
+
             floor.Workstations.Add(workstation);
 
             try
