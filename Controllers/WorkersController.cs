@@ -16,23 +16,23 @@ namespace Aloha.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/workers")]
     public class WorkersController : Controller
     {
-        private readonly AlohaContext alohaContext;
+        private readonly AlohaContext dbContext;
         private readonly IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping;
         private readonly IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping;
         private readonly IEntityUpdater<Worker> workerUpdater;
         private readonly ISecurityService securityService;
 
         public WorkersController(
-            AlohaContext alohaContext,
+            AlohaContext dbContext,
             IClassMapping<Worker, WorkerDto> workerToWorkerDtoMapping,
             IClassMapping<WorkerDto, Worker> workerDtoToWorkerMapping,
             IEntityUpdater<Worker> workerUpdater,
             ISecurityService securityService)
         {
-            this.alohaContext = alohaContext;
+            this.dbContext = dbContext;
             this.workerToWorkerDtoMapping = workerToWorkerDtoMapping;
             this.workerDtoToWorkerMapping = workerDtoToWorkerMapping;
             this.workerUpdater = workerUpdater;
@@ -40,9 +40,10 @@ namespace Aloha.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public List<WorkerDto> List()
         {
-            return alohaContext.Workers
+            return dbContext.Workers
                 .Include(w => w.User)
                 .Include(w => w.Workstation)
                     .ThenInclude(w => w.Floor)
@@ -52,21 +53,29 @@ namespace Aloha.Controllers
         }
 
         [HttpGet("{id}")]
-        public WorkerDto GetById(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult<WorkerDto> GetById(int id)
         {
-            Worker worker = alohaContext.Workers
+            Worker worker = dbContext.Workers
                 .Include(w => w.User)
                 .Include(w => w.Workstation)
                     .ThenInclude(w => w.Floor)
                 .Include(f => f.Photo)
-                .Single(w => w.Id == id);
+                .SingleOrDefault(w => w.Id == id);
 
-            return worker == null
-                ? null
-                : workerToWorkerDtoMapping.Map(worker);
+            if (worker == null)
+            {
+                return NotFound();
+            }
+
+            return workerToWorkerDtoMapping.Map(worker);
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(409)]
         public ActionResult<WorkerDto> Add([FromBody]WorkerDto workerDto)
         {
             if (workerDto.UserName == null)
@@ -88,29 +97,46 @@ namespace Aloha.Controllers
                 PasswordHash = securityService.HashPassword(workerDto.Password)
             };
 
-            alohaContext.Users.Add(user);
-            alohaContext.SaveChanges();
+            dbContext.Users.Add(user);
 
-            return workerToWorkerDtoMapping.Map(worker);
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
+
+            return CreatedAtAction(nameof(GetById), new { Id = worker.Id }, workerToWorkerDtoMapping.Map(worker));
         }
 
         [HttpPut("{id}")]
-        public WorkerDto Update(int id, [FromBody]WorkerDto workerDto)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        public ActionResult<WorkerDto> Update(int id, [FromBody]WorkerDto workerDto)
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
 
-            Worker actualWorker = alohaContext.Workers
+            Worker actualWorker = dbContext.Workers
                 .Include(f => f.User)
                 .Include(w => w.Workstation)
                     .ThenInclude(w => w.Floor)
                 .Include(f => f.Photo)
                 .SingleOrDefault(f => f.Id == id);
 
+            if (actualWorker == null)
+            {
+                return NotFound();
+            }
+
             if (workerDto.PhotoUrl != null && workerDto.PhotoUrl != string.Empty)
             {
                 if (actualWorker.Photo != null)
                 {
-                    alohaContext.Remove(actualWorker.Photo);
+                    dbContext.Remove(actualWorker.Photo);
                 }
 
                 actualWorker.Photo = FileHelper.GetFileFromBase64(workerDto.PhotoUrl);
@@ -118,28 +144,44 @@ namespace Aloha.Controllers
 
             workerUpdater.Update(actualWorker, worker);
 
-            alohaContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
 
             return workerToWorkerDtoMapping.Map(actualWorker);
         }
 
         [HttpDelete("{id}")]
-        public void Remove(int id)
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public ActionResult Remove(int id)
         {
-            Worker worker = alohaContext.Workers
+            Worker worker = dbContext.Workers
                 .Include(w => w.User)
                 .Include(f => f.Photo)
-                .Single(w => w.Id == id);
+                .SingleOrDefault(w => w.Id == id);
 
-            alohaContext.Workers.Remove(worker);
-            alohaContext.Users.Remove(worker.User);
+            if (worker == null)
+            {
+                return NotFound();
+            }
+
+            dbContext.Workers.Remove(worker);
+            dbContext.Users.Remove(worker.User);
 
             if (worker.Photo != null)
             {
-                alohaContext.Files.Remove(worker.Photo);
+                dbContext.Files.Remove(worker.Photo);
             }
 
-            alohaContext.SaveChanges();
+            dbContext.SaveChanges();
+
+            return NoContent();
         }
     }
 }

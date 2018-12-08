@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Aloha.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/security")]
     public class SecurityController : Controller
     {
         private readonly AlohaContext alohaDbContext;
@@ -25,6 +25,8 @@ namespace Aloha.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
         public ActionResult<UserProfileWithToken> Authenticate([FromBody]CredentialsDto credentials)
         {
             var token = securityService.GenerateJwtToken(credentials.UserName, credentials.Password);
@@ -37,7 +39,12 @@ namespace Aloha.Controllers
             var user = alohaDbContext.Users
                 .Include(u => u.Worker)
                     .ThenInclude(w => w.Photo)
-                .Single(u => u.UserName == credentials.UserName);
+                .SingleOrDefault(u => u.UserName == credentials.UserName);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
 
             var response = new UserProfileWithToken()
             {
@@ -49,7 +56,7 @@ namespace Aloha.Controllers
                 ImageId = user.Worker?.Photo?.Id
             };
 
-            return new ActionResult<UserProfileWithToken>(response);
+            return response;
         }
 
         [HttpGet("info")]

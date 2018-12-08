@@ -14,66 +14,49 @@ namespace Aloha.Controllers
 {
     [Obsolete("Users won't be a part of the public API, they'll be created and served in WorkersController.")]
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/users")]
     public class UsersController : Controller
     {
-        private readonly AlohaContext alohaContext;
+        private readonly AlohaContext dbContext;
         private readonly ISecurityService securityService;
         private readonly IClassMapping<User, UserDto> userToUserDtoMapping;
         private readonly IClassMapping<UserDto, User> userDtoToUserMapping;
 
         public UsersController(
-            AlohaContext alohaContext,
+            AlohaContext dbContext,
             ISecurityService securityService,
             IClassMapping<User, UserDto> userToUserDtoMapping,
             IClassMapping<UserDto, User> userDtoToUserMapping)
         {
-            this.alohaContext = alohaContext;
+            this.dbContext = dbContext;
             this.securityService = securityService;
             this.userToUserDtoMapping = userToUserDtoMapping;
             this.userDtoToUserMapping = userDtoToUserMapping;
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public List<UserDto> List()
         {
-            return alohaContext.Users
+            return dbContext.Users
                 .Select(userToUserDtoMapping.Map)
                 .ToList();
         }
 
         [HttpGet("{id}")]
-        public UserDto GetById(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult<UserDto> GetById(int id)
         {
-            User user = alohaContext.Users.Find(id);
+            User user = dbContext.Users
+                .SingleOrDefault(u => u.Id == id);
 
-            return user == null
-                ? null
-                : userToUserDtoMapping.Map(user);
-        }
-
-        [HttpPost]
-        public UserDto Add([FromBody]UserDto userDto)
-        {
-            User user = userDtoToUserMapping.Map(userDto);
-
-            user.PasswordHash = securityService.HashPassword("test");
-
-            alohaContext.Users.Add(user);
-
-            alohaContext.SaveChanges();
+            if (user == null)
+            {
+                return NotFound();
+            }
 
             return userToUserDtoMapping.Map(user);
-        }
-
-        [HttpDelete("{id}")]
-        public void Remove(int id)
-        {
-            User user = alohaContext.Users.Find(id);
-
-            alohaContext.Users.Remove(user);
-
-            alohaContext.SaveChanges();
         }
     }
 }
