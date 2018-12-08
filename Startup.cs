@@ -149,9 +149,6 @@ namespace Aloha
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint(SwaggerConfig.EndpointUrl, SwaggerConfig.EndpointDescription));
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -161,13 +158,15 @@ namespace Aloha
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod());
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint(SwaggerConfig.EndpointUrl, SwaggerConfig.EndpointDescription));
 
             app.UseAuthentication();
 
