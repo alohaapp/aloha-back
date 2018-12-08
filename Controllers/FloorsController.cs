@@ -13,7 +13,7 @@ namespace Aloha.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/floors")]
     public class FloorsController : Controller
     {
         private readonly AlohaContext dbContext;
@@ -37,9 +37,10 @@ namespace Aloha.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public List<FloorDto> List()
         {
-            return dbContext.Set<Floor>()
+            return dbContext.Floors
                 .Include(f => f.Office)
                 .Include(f => f.Workstations)
                 .Include(f => f.Image)
@@ -48,21 +49,29 @@ namespace Aloha.Controllers
         }
 
         [HttpGet("{id}")]
-        public FloorDto Get(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult<FloorDto> GetById(int id)
         {
-            Floor floor = dbContext.Set<Floor>()
+            Floor floor = dbContext.Floors
                 .Include(f => f.Office)
                 .Include(f => f.Workstations)
                 .Include(f => f.Image)
-                .Single(f => f.Id == id);
+                .SingleOrDefault(f => f.Id == id);
 
-            return floor == null
-                ? null
-                : floorToFloorDtoMapping.Map(floor);
+            if (floor == null)
+            {
+                return NotFound();
+            }
+
+            return floorToFloorDtoMapping.Map(floor);
         }
 
         [HttpPost]
-        public FloorDto Add([FromBody]FloorDto floorDto)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(409)]
+        public ActionResult<FloorDto> Add([FromBody]FloorDto floorDto)
         {
             Floor floor = floorDtoToFloorMapping.Map(floorDto);
 
@@ -74,11 +83,15 @@ namespace Aloha.Controllers
 
             dbContext.SaveChanges();
 
-            return floorToFloorDtoMapping.Map(floor);
+            return CreatedAtAction(nameof(GetById), new { Id = floor.Id }, floorToFloorDtoMapping.Map(floor));
         }
 
         [HttpPut("{id}")]
-        public FloorDto Update(int id, [FromBody]FloorDto floorDto)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        public ActionResult<FloorDto> Update(int id, [FromBody]FloorDto floorDto)
         {
             Floor floor = floorDtoToFloorMapping.Map(floorDto);
 
@@ -87,6 +100,11 @@ namespace Aloha.Controllers
                 .Include(f => f.Workstations)
                 .Include(f => f.Image)
                 .SingleOrDefault(f => f.Id == id);
+
+            if (actualFloor == null)
+            {
+                return NotFound();
+            }
 
             if (floorDto.ImageUrl != null && floorDto.ImageUrl != string.Empty)
             {
@@ -106,11 +124,18 @@ namespace Aloha.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void Remove(int id)
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public ActionResult Remove(int id)
         {
             Floor floor = dbContext.Floors
                 .Include(f => f.Image)
-                .Single(f => f.Id == id);
+                .SingleOrDefault(f => f.Id == id);
+
+            if (floor == null)
+            {
+                return NotFound();
+            }
 
             dbContext.Floors.Remove(floor);
 
@@ -120,6 +145,8 @@ namespace Aloha.Controllers
             }
 
             dbContext.SaveChanges();
+
+            return NoContent();
         }
     }
 }

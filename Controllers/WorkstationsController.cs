@@ -12,7 +12,8 @@ namespace Aloha.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    [Route("api/v1/Floors/{floorId}/[controller]")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
+    [Route("api/v1/Floors/{floorId}/workstations")]
     public class WorkstationsController : Controller
     {
         private readonly AlohaContext dbContext;
@@ -33,9 +34,10 @@ namespace Aloha.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public List<WorkstationDto> List(int floorId)
         {
-            return dbContext.Set<Workstation>()
+            return dbContext.Workstations
                 .Include(w => w.Floor)
                 .Where(w => w.Floor.Id == floorId)
                 .Select(workstationToWorkstationDtoMapping.Map)
@@ -43,20 +45,28 @@ namespace Aloha.Controllers
         }
 
         [HttpGet("{id}")]
-        public WorkstationDto Get(int floorId, int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult<WorkstationDto> GetById(int floorId, int id)
         {
-            Workstation workstation = dbContext.Set<Workstation>()
+            Workstation workstation = dbContext.Workstations
                 .Include(w => w.Floor)
                 .Where(w => w.Floor.Id == floorId)
                 .SingleOrDefault(w => w.Id == id);
 
-            return workstation == null
-                ? null
-                : workstationToWorkstationDtoMapping.Map(workstation);
+            if (workstation == null)
+            {
+                return NotFound();
+            }
+
+            return workstationToWorkstationDtoMapping.Map(workstation);
         }
 
         [HttpPost]
-        public WorkstationDto Add(int floorId, [FromBody]WorkstationDto workstationDto)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(409)]
+        public ActionResult<WorkstationDto> Add(int floorId, [FromBody]WorkstationDto workstationDto)
         {
             Workstation workstation = workstationDtoToWorkstationMapping.Map(workstationDto);
 
@@ -68,11 +78,15 @@ namespace Aloha.Controllers
 
             dbContext.SaveChanges();
 
-            return workstationToWorkstationDtoMapping.Map(workstation);
+            return CreatedAtAction(nameof(GetById), new { floorId = floor.Id, Id = workstation.Id }, workstationToWorkstationDtoMapping.Map(workstation));
         }
 
         [HttpPut("{id}")]
-        public WorkstationDto Update(int floorId, int id, [FromBody]WorkstationDto workstationDto)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        public ActionResult<WorkstationDto> Update(int floorId, int id, [FromBody]WorkstationDto workstationDto)
         {
             Workstation workstation = workstationDtoToWorkstationMapping.Map(workstationDto);
 
@@ -83,7 +97,7 @@ namespace Aloha.Controllers
 
             if (actualWorkstation == null)
             {
-                return null;
+                return NotFound();
             }
 
             workstationUpdater.Update(actualWorkstation, workstation);
@@ -94,16 +108,25 @@ namespace Aloha.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void Remove(int floorId, int id)
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public ActionResult Remove(int floorId, int id)
         {
             Workstation workstation = dbContext.Workstations
                 .Include(w => w.Floor)
                 .Where(w => w.Floor.Id == floorId)
                 .SingleOrDefault(w => w.Id == id);
 
-            dbContext.Set<Workstation>().Remove(workstation);
+            if (workstation == null)
+            {
+                return NotFound();
+            }
+
+            dbContext.Workstations.Remove(workstation);
 
             dbContext.SaveChanges();
+
+            return NoContent();
         }
     }
 }

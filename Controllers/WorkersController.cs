@@ -16,7 +16,7 @@ namespace Aloha.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/workers")]
     public class WorkersController : Controller
     {
         private readonly AlohaContext alohaContext;
@@ -40,6 +40,7 @@ namespace Aloha.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public List<WorkerDto> List()
         {
             return alohaContext.Workers
@@ -52,21 +53,29 @@ namespace Aloha.Controllers
         }
 
         [HttpGet("{id}")]
-        public WorkerDto GetById(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult<WorkerDto> GetById(int id)
         {
             Worker worker = alohaContext.Workers
                 .Include(w => w.User)
                 .Include(w => w.Workstation)
                     .ThenInclude(w => w.Floor)
                 .Include(f => f.Photo)
-                .Single(w => w.Id == id);
+                .SingleOrDefault(w => w.Id == id);
 
-            return worker == null
-                ? null
-                : workerToWorkerDtoMapping.Map(worker);
+            if (worker == null)
+            {
+                return NotFound();
+            }
+
+            return workerToWorkerDtoMapping.Map(worker);
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(409)]
         public ActionResult<WorkerDto> Add([FromBody]WorkerDto workerDto)
         {
             if (workerDto.UserName == null)
@@ -91,11 +100,15 @@ namespace Aloha.Controllers
             alohaContext.Users.Add(user);
             alohaContext.SaveChanges();
 
-            return workerToWorkerDtoMapping.Map(worker);
+            return CreatedAtAction(nameof(GetById), new { Id = worker.Id }, workerToWorkerDtoMapping.Map(worker));
         }
 
         [HttpPut("{id}")]
-        public WorkerDto Update(int id, [FromBody]WorkerDto workerDto)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        public ActionResult<WorkerDto> Update(int id, [FromBody]WorkerDto workerDto)
         {
             Worker worker = workerDtoToWorkerMapping.Map(workerDto);
 
@@ -105,6 +118,11 @@ namespace Aloha.Controllers
                     .ThenInclude(w => w.Floor)
                 .Include(f => f.Photo)
                 .SingleOrDefault(f => f.Id == id);
+
+            if (actualWorker == null)
+            {
+                return NotFound();
+            }
 
             if (workerDto.PhotoUrl != null && workerDto.PhotoUrl != string.Empty)
             {
@@ -124,12 +142,19 @@ namespace Aloha.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void Remove(int id)
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public ActionResult Remove(int id)
         {
             Worker worker = alohaContext.Workers
                 .Include(w => w.User)
                 .Include(f => f.Photo)
-                .Single(w => w.Id == id);
+                .SingleOrDefault(w => w.Id == id);
+
+            if (worker == null)
+            {
+                return NotFound();
+            }
 
             alohaContext.Workers.Remove(worker);
             alohaContext.Users.Remove(worker.User);
@@ -140,6 +165,8 @@ namespace Aloha.Controllers
             }
 
             alohaContext.SaveChanges();
+
+            return NoContent();
         }
     }
 }

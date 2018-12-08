@@ -14,7 +14,7 @@ namespace Aloha.Controllers
 {
     [Obsolete("Users won't be a part of the public API, they'll be created and served in WorkersController.")]
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/users")]
     public class UsersController : Controller
     {
         private readonly AlohaContext alohaContext;
@@ -35,6 +35,7 @@ namespace Aloha.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public List<UserDto> List()
         {
             return alohaContext.Users
@@ -43,37 +44,19 @@ namespace Aloha.Controllers
         }
 
         [HttpGet("{id}")]
-        public UserDto GetById(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult<UserDto> GetById(int id)
         {
-            User user = alohaContext.Users.Find(id);
+            User user = alohaContext.Users
+                .SingleOrDefault(u => u.Id == id);
 
-            return user == null
-                ? null
-                : userToUserDtoMapping.Map(user);
-        }
-
-        [HttpPost]
-        public UserDto Add([FromBody]UserDto userDto)
-        {
-            User user = userDtoToUserMapping.Map(userDto);
-
-            user.PasswordHash = securityService.HashPassword("test");
-
-            alohaContext.Users.Add(user);
-
-            alohaContext.SaveChanges();
+            if (user == null)
+            {
+                return NotFound();
+            }
 
             return userToUserDtoMapping.Map(user);
-        }
-
-        [HttpDelete("{id}")]
-        public void Remove(int id)
-        {
-            User user = alohaContext.Users.Find(id);
-
-            alohaContext.Users.Remove(user);
-
-            alohaContext.SaveChanges();
         }
     }
 }

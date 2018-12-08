@@ -12,7 +12,7 @@ namespace Aloha.Controllers
 {
     [AllowAnonymous]
     [Controller]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/files")]
     public class FilesController : Controller
     {
         private readonly AlohaContext dbContext;
@@ -23,17 +23,19 @@ namespace Aloha.Controllers
         }
 
         [HttpGet("{id}")]
-        public FileContentResult Get(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult GetById(int id)
         {
             File file = dbContext.Files
-                .Single(f => f.Id == id);
+                .SingleOrDefault(f => f.Id == id);
 
-            if (file != null)
+            if (file == null)
             {
-                return File(file.Data, file.MediaType);
+                return NotFound();
             }
 
-            return null;
+            return File(file.Data, file.MediaType);
         }
     }
 }

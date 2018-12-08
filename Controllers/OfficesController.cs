@@ -12,7 +12,7 @@ namespace Aloha.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/offices")]
     public class OfficesController : Controller
     {
         private readonly AlohaContext dbContext;
@@ -36,6 +36,7 @@ namespace Aloha.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public List<OfficeDto> List()
         {
             return dbContext.Offices
@@ -44,46 +45,72 @@ namespace Aloha.Controllers
         }
 
         [HttpGet("{id}")]
-        public OfficeDto Get(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult<OfficeDto> GetById(int id)
         {
             Office office = dbContext.Offices
-                .Single(o => o.Id == id);
+                .SingleOrDefault(o => o.Id == id);
 
-            return office == null
-                ? null
-                : officeToOfficeDtoMapping.Map(office);
+            if (office == null)
+            {
+                return NotFound();
+            }
+
+            return officeToOfficeDtoMapping.Map(office);
         }
 
         [HttpGet("{id}/Floors")]
-        public List<FloorDto> ListFloors(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult<List<FloorDto>> ListFloors(int id)
         {
-            return dbContext.Offices
+            Office office = dbContext.Offices
                 .Include(o => o.Floors)
-                .Single(o => o.Id == id)?.Floors
+                .SingleOrDefault(o => o.Id == id);
+
+            if (office == null)
+            {
+                return NotFound();
+            }
+
+            return office.Floors
                 .Select(floorToFloorDtoMapping.Map)
                 .ToList();
         }
 
         [HttpPost]
-        public OfficeDto Add([FromBody]OfficeDto officeDto)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(409)]
+        public ActionResult<OfficeDto> Add([FromBody]OfficeDto officeDto)
         {
             Office office = officeDtoToOfficeMapping.Map(officeDto);
 
-            dbContext.Set<Office>()
+            dbContext.Offices
                 .Add(office);
 
             dbContext.SaveChanges();
 
-            return officeToOfficeDtoMapping.Map(office);
+            return CreatedAtAction(nameof(GetById), new { Id = office.Id }, officeToOfficeDtoMapping.Map(office));
         }
 
         [HttpPut("{id}")]
-        public OfficeDto Update(int id, [FromBody]OfficeDto officeDto)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        public ActionResult<OfficeDto> Update(int id, [FromBody]OfficeDto officeDto)
         {
             Office office = officeDtoToOfficeMapping.Map(officeDto);
 
             Office actualOffice = dbContext.Offices
                 .SingleOrDefault(f => f.Id == id);
+
+            if (actualOffice == null)
+            {
+                return NotFound();
+            }
 
             officeUpdater.Update(actualOffice, office);
 
@@ -93,14 +120,23 @@ namespace Aloha.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void Remove(int id)
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public ActionResult Remove(int id)
         {
-            Office office = dbContext.Set<Office>()
-                .Find(id);
+            Office office = dbContext.Offices
+                .SingleOrDefault(o => o.Id == id);
 
-            dbContext.Set<Office>().Remove(office);
+            if (office == null)
+            {
+                return NotFound();
+            }
+
+            dbContext.Offices.Remove(office);
 
             dbContext.SaveChanges();
+
+            return NoContent();
         }
     }
 }
