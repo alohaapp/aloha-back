@@ -4,12 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Aloha.Model.Entities
 {
-    public class Workstation
+    public class Workstation : BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
         public decimal X { get; set; }
 
         public decimal Y { get; set; }
