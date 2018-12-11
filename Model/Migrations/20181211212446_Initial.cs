@@ -1,18 +1,33 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Aloha.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    MediaType = table.Column<string>(nullable: false),
+                    Data = table.Column<byte[]>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Offices",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -25,12 +40,14 @@ namespace Aloha.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserName = table.Column<string>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    UserName = table.Column<string>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.UniqueConstraint("AK_Users_UserName", x => x.UserName);
                 });
 
             migrationBuilder.CreateTable(
@@ -38,14 +55,20 @@ namespace Aloha.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Name = table.Column<string>(nullable: false),
-                    ImageURL = table.Column<string>(nullable: true),
+                    ImageId = table.Column<int>(nullable: true),
                     OfficeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Floors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Floors_Files_ImageId",
+                        column: x => x.ImageId,
+                        principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Floors_Offices_OfficeId",
                         column: x => x.OfficeId,
@@ -59,17 +82,23 @@ namespace Aloha.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Name = table.Column<string>(nullable: false),
                     Surname = table.Column<string>(nullable: true),
-                    PhotoUrl = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Notes = table.Column<string>(nullable: true),
+                    PhotoId = table.Column<int>(nullable: true),
                     UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Workers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Workers_Files_PhotoId",
+                        column: x => x.PhotoId,
+                        principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Workers_Users_UserId",
                         column: x => x.UserId,
@@ -83,7 +112,7 @@ namespace Aloha.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     X = table.Column<decimal>(nullable: false),
                     Y = table.Column<decimal>(nullable: false),
                     WorkerId = table.Column<int>(nullable: true),
@@ -106,10 +135,25 @@ namespace Aloha.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "PasswordHash", "UserName" },
+                values: new object[] { -1, "8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918", "admin" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Floors_ImageId",
+                table: "Floors",
+                column: "ImageId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Floors_OfficeId",
                 table: "Floors",
                 column: "OfficeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Workers_PhotoId",
+                table: "Workers",
+                column: "PhotoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Workers_UserId",
@@ -142,6 +186,9 @@ namespace Aloha.Migrations
 
             migrationBuilder.DropTable(
                 name: "Offices");
+
+            migrationBuilder.DropTable(
+                name: "Files");
 
             migrationBuilder.DropTable(
                 name: "Users");

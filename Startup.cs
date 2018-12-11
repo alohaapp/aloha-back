@@ -105,16 +105,9 @@ namespace Aloha
 
             services.AddDbContext<AlohaContext>(options =>
             {
-                string connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
-                string portNumber = Regex.Match(connectionString, @"(?<=Data Source.+:)\d+")?.Value;
+                var connectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
 
-                if (portNumber != null && portNumber.Length > 0)
-                {
-                    connectionString += ";Port=" + portNumber;
-                    connectionString = connectionString.Replace(":" + portNumber, string.Empty);
-                }
-
-                options.UseMySql(connectionString);
+                options.UseNpgsql(connectionString);
             });
 
             // Services

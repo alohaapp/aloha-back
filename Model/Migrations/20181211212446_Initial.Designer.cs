@@ -5,19 +5,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Aloha.Migrations
 {
     [DbContext(typeof(AlohaContext))]
-    [Migration("20181130195107_FilesMigration")]
-    partial class FilesMigration
+    [Migration("20181211212446_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Aloha.Model.Entities.File", b =>
                 {
@@ -74,12 +76,25 @@ namespace Aloha.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("PasswordHash")
+                        .IsRequired();
+
                     b.Property<string>("UserName")
                         .IsRequired();
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("UserName");
+
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            PasswordHash = "8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918",
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Aloha.Model.Entities.Worker", b =>
