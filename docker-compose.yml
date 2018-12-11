@@ -7,18 +7,18 @@ services:
             - "80:80"
             - "443:443"
         depends_on:
-            - aloha-mysql
+            - db
         environment:
-            MYSQLCONNSTR_localdb: "Server=aloha-mysql;Port=3306;Database=aloha;Uid=aloha;Pwd=aloha;"
-    aloha-mysql:
-        image: mysql:5.5
-        command: --max_allowed_packet=268435456
-        ports: # Development Only!
-            - "3306:3306"
+            POSTGRES_CONNECTION_STRING: "Host=db;Database=aloha;Username=aloha;Password=aloha"
+    db:
+        image: postgres:11
+        ports:
+            - "5432:5432"
         environment:
-            MYSQL_ROOT_PASSWORD: "aloha"
-            MYSQL_DATABASE: "aloha"
-            MYSQL_USER: "aloha"
-            MYSQL_PASSWORD: "aloha"
+            POSTGRES_DB: "aloha"
+            POSTGRES_USER: "aloha"
+            POSTGRES_PASSWORD: "aloha"
         volumes:
-            - ./mysql:/var/lib/mysql
+            - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:

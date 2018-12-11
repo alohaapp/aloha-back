@@ -2,7 +2,6 @@
 .gitignore
 bin
 obj
-mysql
 
 LICENSE
 README.md
