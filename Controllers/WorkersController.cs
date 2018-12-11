@@ -132,6 +132,11 @@ namespace Aloha.Controllers
                 return NotFound();
             }
 
+            if (actualWorker.ConcurrencyToken != workerDto.ConcurrencyToken)
+            {
+                return Conflict();
+            }
+
             if (workerDto.PhotoUrl != null && workerDto.PhotoUrl != string.Empty)
             {
                 if (actualWorker.Photo != null)

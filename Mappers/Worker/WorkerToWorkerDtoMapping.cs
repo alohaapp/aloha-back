@@ -11,6 +11,7 @@ namespace Aloha.Mappers
             return new WorkerDto()
             {
                 Id = worker.Id,
+                ConcurrencyToken = worker.ConcurrencyToken,
                 Name = worker.Name,
                 Surname = worker.Surname,
                 Email = worker.Email,

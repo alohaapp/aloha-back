@@ -6,6 +6,8 @@ namespace Aloha.Dtos
     {
         public int Id { get; set; }
 
+        public uint ConcurrencyToken { get; set; }
+
         [Required]
         public string Name { get; set; }
 

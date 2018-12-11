@@ -10,6 +10,7 @@ namespace Aloha.Mappers
         {
             return new Worker()
             {
+                ConcurrencyToken = workerDto.ConcurrencyToken,
                 Name = workerDto.Name,
                 Surname = workerDto.Surname,
                 Email = workerDto.Email,
