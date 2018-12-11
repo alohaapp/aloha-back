@@ -26,17 +26,6 @@ namespace Aloha.Model.Contexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            foreach (var entity in builder.Model.GetEntityTypes()
-                .Where(entity => typeof(BaseEntity).IsAssignableFrom(entity.ClrType)))
-            {
-                builder.Entity(entity.ClrType)
-                    .Property(nameof(BaseEntity.ConcurrencyToken))
-                        .HasColumnName("xmin")
-                        .HasColumnType("xid")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .IsConcurrencyToken();
-            }
-
             builder.Entity<User>()
                 .HasAlternateKey(u => u.UserName);
             builder.Entity<Worker>()
