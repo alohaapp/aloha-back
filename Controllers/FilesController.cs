@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
-    [AllowAnonymous]
     [Controller]
     [Route("api/v1/files")]
     public class FilesController : Controller
@@ -22,6 +21,7 @@ namespace Aloha.Controllers
             this.dbContext = dbContext;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

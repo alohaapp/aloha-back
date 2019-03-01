@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/v1/floors")]
     public class FloorsController : Controller
@@ -36,6 +35,7 @@ namespace Aloha.Controllers
             this.floorUpdater = floorUpdater;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(200)]
         public List<FloorDto> List()
@@ -48,6 +48,7 @@ namespace Aloha.Controllers
                 .ToList();
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

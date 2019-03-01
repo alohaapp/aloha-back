@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/v1/Floors/{floorId}/workstations")]
     public class WorkstationsController : Controller
@@ -32,6 +31,7 @@ namespace Aloha.Controllers
             this.workstationUpdater = workstationUpdater;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(200)]
         public List<WorkstationDto> List(int floorId)
@@ -43,6 +43,7 @@ namespace Aloha.Controllers
                 .ToList();
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
