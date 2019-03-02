@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/v1/offices")]
     public class OfficesController : Controller
@@ -35,6 +34,7 @@ namespace Aloha.Controllers
             this.officeUpdater = officeUpdater;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(200)]
         public List<OfficeDto> List()
@@ -44,6 +44,7 @@ namespace Aloha.Controllers
                 .ToList();
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -60,6 +61,7 @@ namespace Aloha.Controllers
             return officeToOfficeDtoMapping.Map(office);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}/Floors")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

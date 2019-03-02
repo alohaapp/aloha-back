@@ -14,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aloha.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/v1/workers")]
     public class WorkersController : Controller
@@ -39,6 +38,7 @@ namespace Aloha.Controllers
             this.securityService = securityService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(200)]
         public List<WorkerDto> List()
@@ -52,6 +52,7 @@ namespace Aloha.Controllers
                 .ToList();
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
